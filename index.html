@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estratégia Penny Product: Imersão & ROI</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Design Configuration & Palette -->
+    <!-- 
+        Palette Selected: "Fintech Growth"
+        Primary: #3730a3 (Indigo-800)
+        Secondary: #0d9488 (Teal-600)
+        Accent: #f59e0b (Amber-500)
+        Background: #f8fafc (Slate-50)
+    -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#312e81', // Indigo 900
+                            primary: '#4338ca', // Indigo 700
+                            secondary: '#0d9488', // Teal 600
+                            accent: '#f59e0b', // Amber 500
+                            light: '#e0e7ff', // Indigo 100
+                            bg: '#f8fafc' // Slate 50
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Chart Container Styling Rules */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px; /* Constrain max width for readability */
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px; /* Default height */
+            max-height: 450px;
+        }
+
+        /* Responsive adjustments for chart height */
+        @media (max-width: 640px) {
+            .chart-container {
+                height: 280px;
+            }
+        }
+
+        /* Custom Utilities */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #312e81 0%, #0d9488 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .step-connector::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            width: 2px;
+            height: 24px;
+            background-color: #cbd5e1;
+            transform: translateX(-50%);
+            z-index: 0;
+        }
+        
+        .last-step::after {
+            display: none;
+        }
+
+        @media (min-width: 768px) {
+            .step-connector::after {
+                top: 50%;
+                left: 100%;
+                width: 24px;
+                height: 2px;
+                transform: translateY(-50%);
+            }
+        }
+    </style>
+    
+    <!-- 
+        PLAN SUMMARY:
+        1. Intro: Define Penny Product & Strategic Goals.
+        2. Benchmark: "Unlock Imersão" Case Study KPI Cards.
+        3. Financials: Chart showing Revenue Scenarios (R$5 vs R$17).
+        4. CPA Strategy: Line Chart showing Max CPA Capacity.
+        5. Offer: Comparison Cards (Essential vs Pro).
+        6. Test Structure: Flow Diagram + Donut Chart.
+        7. Conclusion: Strategic Recap.
+        
+        NO SVG USED. NO MERMAID USED.
+    -->
+</head>
+<body class="bg-brand-bg text-slate-800 antialiased selection:bg-brand-secondary selection:text-white">
+
+    <!-- Header Section -->
+    <header class="w-full bg-white shadow-sm border-b border-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-5xl mx-auto text-center">
+            <span class="inline-block py-1 px-3 rounded-full bg-brand-light text-brand-primary text-xs font-bold tracking-wider uppercase mb-4">Estratégia de Monetização</span>
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4">
+                <span class="gradient-text">Penny Product</span> na Imersão
+            </h1>
+            <p class="text-lg md:text-xl text-slate-500 max-w-3xl mx-auto">
+                Transformando a página de obrigado em uma alavanca de qualificação, receita antecipada e escala estrutural.
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+
+        <!-- Section 1: Concept Definition -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="text-3xl font-bold text-slate-900 mb-6 border-l-4 border-brand-secondary pl-4">O Que é o Penny Product?</h2>
+                <p class="text-slate-600 mb-4 leading-relaxed">
+                    Não é apenas uma venda. É uma <strong>camada estratégica de qualificação</strong>. O Penny Product é uma oferta de baixo ticket (R$5 ou R$17) apresentada imediatamente na "Thank You Page" (TYP) da sua imersão gratuita.
+                </p>
+                <p class="text-slate-600 mb-6 leading-relaxed">
+                    Ao criar um micro-compromisso financeiro, identificamos leads com <strong>maior intenção de compra</strong> para o produto principal (High Ticket), enquanto geramos caixa para abater custos de tráfego.
+                </p>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-100">
+                        <div class="text-brand-primary text-2xl font-bold mb-1">🔍</div>
+                        <h3 class="font-semibold text-slate-900">Filtro de Intenção</h3>
+                        <p class="text-xs text-slate-500">Quem paga, engaja mais.</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-100">
+                        <div class="text-brand-secondary text-2xl font-bold mb-1">💰</div>
+                        <h3 class="font-semibold text-slate-900">Receita Antecipada</h3>
+                        <p class="text-xs text-slate-500">Cashflow imediato.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-br from-brand-dark to-brand-primary rounded-2xl p-8 text-white shadow-xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 opacity-10 text-9xl font-black -mr-4 -mt-4">R$</div>
+                <h3 class="text-2xl font-bold mb-6">Objetivos Centrais</h3>
+                <ul class="space-y-4">
+                    <li class="flex items-start">
+                        <span class="flex-shrink-0 h-6 w-6 rounded-full bg-brand-accent flex items-center justify-center text-xs font-bold text-white mt-1 mr-3">1</span>
+                        <span><strong>Reduzir Risco:</strong> Diminuir a exposição financeira da operação de tráfego.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="flex-shrink-0 h-6 w-6 rounded-full bg-brand-accent flex items-center justify-center text-xs font-bold text-white mt-1 mr-3">2</span>
+                        <span><strong>Validar Lead:</strong> O cartão de crédito é o melhor validador de interesse.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="flex-shrink-0 h-6 w-6 rounded-full bg-brand-accent flex items-center justify-center text-xs font-bold text-white mt-1 mr-3">3</span>
+                        <span><strong>Escalar CPA:</strong> Aumentar o teto de gasto por lead sustentável.</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section 2: Case Study Data -->
+        <section class="bg-slate-50 rounded-3xl p-8 md:p-12 border border-slate-200">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-slate-900 mb-2">Histórico de Validação: Imersão Unlock</h2>
+                <p class="text-slate-600">
+                    Dados reais da edição anterior mostram que existe disposição de compra na página de obrigado, mesmo com tickets mais elevados que o Penny tradicional.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="glass-card p-6 rounded-xl shadow-sm text-center transform transition hover:-translate-y-1">
+                    <div class="text-sm text-slate-500 font-medium uppercase tracking-wide mb-2">Ticket Médio</div>
+                    <div class="text-3xl font-bold text-brand-dark">R$ 79,90</div>
+                    <div class="text-xs text-green-600 font-semibold mt-1">Oferta Agentes IA</div>
+                </div>
+                
+                <div class="glass-card p-6 rounded-xl shadow-sm text-center transform transition hover:-translate-y-1">
+                    <div class="text-sm text-slate-500 font-medium uppercase tracking-wide mb-2">Conversão TYP</div>
+                    <div class="text-3xl font-bold text-brand-secondary">1,9%</div>
+                    <div class="text-xs text-slate-400 mt-1">Imediata</div>
+                </div>
+
+                <div class="glass-card p-6 rounded-xl shadow-sm text-center transform transition hover:-translate-y-1">
+                    <div class="text-sm text-slate-500 font-medium uppercase tracking-wide mb-2">Compradores</div>
+                    <div class="text-3xl font-bold text-slate-800">79</div>
+                    <div class="text-xs text-slate-400 mt-1">Total de Vendas</div>
+                </div>
+
+                <div class="glass-card p-6 rounded-xl shadow-sm text-center transform transition hover:-translate-y-1">
+                    <div class="text-sm text-slate-500 font-medium uppercase tracking-wide mb-2">Perfil</div>
+                    <div class="text-3xl font-bold text-brand-accent">85%</div>
+                    <div class="text-xs text-slate-400 mt-1">Não eram alunos</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Financial Scenarios (Charts) -->
+        <section>
+            <div class="max-w-3xl mb-10">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4 border-l-4 border-brand-secondary pl-4">Simulação de Impacto Financeiro</h2>
+                <p class="text-slate-600 leading-relaxed">
+                    O Penny Product isolado (R$5) raramente paga o custo fixo da operação. A mágica acontece na <strong>combinação</strong> com a venda do Plano Full (Ticket R$ 1.200). Abaixo, projetamos a Receita Total em quatro cenários de conversão, comparando o impacto de um Penny a R$5 versus R$17.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- CHART 1: Total Revenue Projection -->
+                <div class="flex flex-col">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                        <span class="w-3 h-3 bg-brand-primary rounded-full mr-2"></span>
+                        Projeção de Receita Total (Penny + Full)
+                    </h3>
+                    <div class="bg-white p-4 rounded-xl shadow-md border border-slate-100 flex-grow">
+                        <!-- Container for Chart 1 -->
+                        <div class="chart-container">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-500 mt-3 italic">
+                        *Cenários baseados em conversão do Plano Full variando de 1.7% a 8%. Observe como o ticket de R$17 amplia a margem de segurança.
+                    </p>
+                </div>
+
+                <!-- CHART 2: Max CPA -->
+                <div class="flex flex-col">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                        <span class="w-3 h-3 bg-brand-secondary rounded-full mr-2"></span>
+                        Efeito no Teto de CPA (Custo por Aquisição)
+                    </h3>
+                    <div class="bg-white p-4 rounded-xl shadow-md border border-slate-100 flex-grow">
+                        <!-- Container for Chart 2 -->
+                        <div class="chart-container">
+                            <canvas id="cpaChart"></canvas>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-500 mt-3 italic">
+                        *Quanto maior a receita por lead (LTV inicial), mais caro podemos pagar no tráfego (CPA) mantendo a operação saudável.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Deliverables Table -->
+        <section class="bg-brand-dark rounded-3xl p-8 md:p-12 text-white">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold mb-4">O Que Vamos Entregar?</h2>
+                <p class="text-indigo-200 max-w-2xl mx-auto">
+                    A oferta precisa ser irresistível (no-brainer) e complementar à imersão, sem concorrer com a assinatura principal.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <!-- Plan 1 -->
+                <div class="bg-indigo-900/50 border border-indigo-700 rounded-2xl p-8 hover:bg-indigo-800 transition duration-300">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h3 class="text-xl font-bold text-white">Plano Essencial</h3>
+                            <div class="text-indigo-300 text-sm mt-1">Entrada</div>
+                        </div>
+                        <div class="text-3xl font-bold text-white">R$ 5</div>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center text-indigo-100">
+                            <span class="mr-2 text-brand-secondary">✓</span> Ebook Oficial da Imersão
+                        </li>
+                        <li class="flex items-center text-indigo-100">
+                            <span class="mr-2 text-brand-secondary">✓</span> 1 Vídeo Exclusivo Complementar
+                        </li>
+                        <li class="flex items-center text-indigo-400 opacity-60">
+                            <span class="mr-2">✕</span> Materiais Bônus
+                        </li>
+                    </ul>
+                    <button class="w-full py-3 rounded-lg bg-indigo-600 text-white font-semibold text-sm opacity-80 cursor-default">Opção de Entrada</button>
+                </div>
+
+                <!-- Plan 2 -->
+                <div class="bg-white text-slate-900 rounded-2xl p-8 relative shadow-2xl transform md:-translate-y-4">
+                    <div class="absolute top-0 right-0 bg-brand-accent text-white text-xs font-bold px-3 py-1 rounded-bl-lg rounded-tr-lg">MELHOR VALOR</div>
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h3 class="text-xl font-bold text-brand-primary">Plano Pro</h3>
+                            <div class="text-slate-500 text-sm mt-1">Recomendado</div>
+                        </div>
+                        <div class="text-3xl font-bold text-brand-dark">R$ 17</div>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center text-slate-700">
+                            <span class="mr-2 text-brand-secondary font-bold">✓</span> Ebook Oficial da Imersão
+                        </li>
+                        <li class="flex items-center text-slate-700">
+                            <span class="mr-2 text-brand-secondary font-bold">✓</span> <strong class="ml-1">3 Vídeos</strong> Exclusivos
+                        </li>
+                        <li class="flex items-center text-slate-700">
+                            <span class="mr-2 text-brand-secondary font-bold">✓</span> Pack de Materiais Bônus
+                        </li>
+                        <li class="flex items-center text-slate-700">
+                            <span class="mr-2 text-brand-secondary font-bold">✓</span> Destaque na Comunidade
+                        </li>
+                    </ul>
+                    <button class="w-full py-3 rounded-lg bg-brand-primary text-white font-semibold text-sm shadow-lg hover:bg-brand-dark transition">Oferta Principal</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: AB Test Structure -->
+        <section>
+            <h2 class="text-3xl font-bold text-slate-900 mb-8 border-l-4 border-brand-secondary pl-4">Estrutura do Teste A/B</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Donut Chart Area -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 lg:col-span-1">
+                    <h3 class="font-bold text-center mb-4 text-slate-700">Divisão de Tráfego</h3>
+                    <div class="chart-container" style="height: 250px;">
+                        <canvas id="splitChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-center text-sm text-slate-500">
+                        Base Total: 100% dos Leads Inscritos
+                    </div>
+                </div>
+
+                <!-- Visual Diagram Area -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 lg:col-span-2 flex flex-col justify-center">
+                    <h3 class="font-bold text-center mb-8 text-slate-700">Fluxo de Validação</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 relative">
+                        <!-- Step 1 -->
+                        <div class="text-center relative step-connector p-4">
+                            <div class="w-12 h-12 bg-slate-200 rounded-full flex items-center justify-center text-2xl mx-auto mb-3">👥</div>
+                            <h4 class="font-bold text-slate-800">Lead Inscreve</h4>
+                            <p class="text-xs text-slate-500 mt-1">Origem: Ads/Orgânico</p>
+                        </div>
+                        
+                        <!-- Step 2 -->
+                        <div class="text-center relative step-connector p-4">
+                            <div class="w-12 h-12 bg-brand-primary text-white rounded-full flex items-center justify-center text-2xl mx-auto mb-3">⚡</div>
+                            <h4 class="font-bold text-brand-primary">Página Obrigado</h4>
+                            <div class="text-xs mt-2 bg-slate-100 p-2 rounded">
+                                <span class="block font-semibold text-slate-700">Grupo A: Nada</span>
+                                <span class="block font-semibold text-brand-secondary">Grupo B: Popup (R$5/R$17)</span>
+                            </div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="text-center relative last-step p-4">
+                            <div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-2xl mx-auto mb-3">📊</div>
+                            <h4 class="font-bold text-slate-800">Clusterização</h4>
+                            <ul class="text-xs text-left mt-2 space-y-1 bg-slate-50 p-2 rounded border border-slate-100 inline-block">
+                                <li>• Não Comprador</li>
+                                <li>• Comprador R$ 5</li>
+                                <li>• Comprador R$ 17</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Conclusion -->
+        <footer class="text-center py-12 border-t border-slate-200 mt-12">
+            <h2 class="text-2xl font-bold text-slate-800 mb-4">Conclusão Estratégica</h2>
+            <p class="max-w-3xl mx-auto text-slate-600 mb-8">
+                O Penny Product não é sobre "vender um ebook". É sobre <strong>construir previsibilidade</strong>. Ao aumentar a conversão do plano Full em poucos pontos percentuais através da qualificação financeira, multiplicamos o ROI e a segurança para escalar a mídia paga.
+            </p>
+            <div class="inline-flex items-center space-x-2 text-sm text-slate-400">
+                <span>Gerado por Canvas Infographics</span>
+                <span>•</span>
+                <span>Dados Simulados</span>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- Chart.js Implementation Script -->
+    <script>
+        // --- UTILITY: LABEL WRAPPING FOR CHART.JS ---
+        // Splits long strings into arrays of shorter strings for Chart.js
+        function wrapLabel(label, maxChars = 16) {
+            if (label.length <= maxChars) return label;
+            
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+
+            for (let i = 1; i < words.length; i++) {
+                if ((currentLine + " " + words[i]).length <= maxChars) {
+                    currentLine += " " + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        // --- SHARED TOOLTIP CONFIGURATION ---
+        // Ensures multi-line labels (arrays) are displayed correctly in tooltips
+        const sharedTooltipConfig = {
+            callbacks: {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    if (Array.isArray(label)) {
+                        return label.join(' ');
+                    } else {
+                        return label;
+                    }
+                }
+            }
+        };
+
+        // --- SHARED CHART DEFAULTS ---
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#64748b'; // Slate-500
+        Chart.defaults.scale.grid.color = '#e2e8f0'; // Slate-200
+        Chart.defaults.plugins.legend.labels.usePointStyle = true;
+
+        // --- CHART 1: REVENUE PROJECTION (Grouped Bar) ---
+        const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
+        
+        // Data Preparation
+        const scenarios = [
+            'Cenário Mínimo (1.7%)', 
+            'Cenário Realista (3%)', 
+            'Cenário Forte (5%)', 
+            'Cenário Otimizado (8%)'
+        ];
+        
+        // Apply Label Wrapping
+        const wrappedScenarios = scenarios.map(s => wrapLabel(s, 16));
+
+        // Data from text:
+        // R$5 Penny Total: 25.4k, 41k, 65k, 101k
+        // R$17 Penny Total: 37.4k, 53k, 77k, 113k
+        
+        new Chart(ctxRevenue, {
+            type: 'bar',
+            data: {
+                labels: wrappedScenarios,
+                datasets: [
+                    {
+                        label: 'Penny R$ 5 + Full',
+                        data: [25400, 41000, 65000, 101000],
+                        backgroundColor: '#4338ca', // Brand Primary
+                        borderRadius: 6,
+                    },
+                    {
+                        label: 'Penny R$ 17 + Full',
+                        data: [37400, 53000, 77000, 113000],
+                        backgroundColor: '#0d9488', // Brand Secondary
+                        borderRadius: 6,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: sharedTooltipConfig,
+                    legend: {
+                        position: 'top',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Receita Total (R$)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return 'R$ ' + value / 1000 + 'k';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // --- CHART 2: MAX CPA (Line Chart) ---
+        const ctxCPA = document.getElementById('cpaChart').getContext('2d');
+        
+        // Data from text:
+        // R$5 Scenario CPA Max: 0.40, 16, 40, 76
+        // R$17 Scenario CPA Max: 12.40, 28, 52, 88
+        
+        new Chart(ctxCPA, {
+            type: 'line',
+            data: {
+                labels: wrappedScenarios, // Reusing wrapped labels
+                datasets: [
+                    {
+                        label: 'CPA Max (Penny R$ 5)',
+                        data: [0.40, 16, 40, 76],
+                        borderColor: '#4338ca',
+                        backgroundColor: '#4338ca',
+                        tension: 0.3,
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    },
+                    {
+                        label: 'CPA Max (Penny R$ 17)',
+                        data: [12.40, 28, 52, 88],
+                        borderColor: '#0d9488',
+                        backgroundColor: '#0d9488',
+                        tension: 0.3,
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: sharedTooltipConfig,
+                    legend: {
+                        position: 'top',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'CPA Máximo Sustentável (R$)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return 'R$ ' + value;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // --- CHART 3: SPLIT TEST (Donut) ---
+        const ctxSplit = document.getElementById('splitChart').getContext('2d');
+        
+        const splitLabels = ['Grupo Controle (Sem Oferta)', 'Grupo Tratamento (Com Penny)'];
+        const wrappedSplitLabels = splitLabels.map(l => wrapLabel(l, 20));
+
+        new Chart(ctxSplit, {
+            type: 'doughnut',
+            data: {
+                labels: wrappedSplitLabels,
+                datasets: [{
+                    data: [50, 50],
+                    backgroundColor: [
+                        '#cbd5e1', // Slate-300
+                        '#f59e0b'  // Brand Accent
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '65%',
+                plugins: {
+                    tooltip: sharedTooltipConfig,
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                size: 10
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
