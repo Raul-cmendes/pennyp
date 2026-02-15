@@ -178,6 +178,56 @@
                 </ul>
             </div>
         </section>
+        <!-- ===================================================== -->
+<!-- SECTION: PROBLEMA ATUAL VS SOLUÇÃO PENNY PRODUCT -->
+<!-- ===================================================== -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+
+    <!-- CARD 1: PROBLEMA ATUAL -->
+    <div class="bg-white p-8 rounded-xl shadow-md border-l-8 border-brand-secondary">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">O Problema Atual</h2>
+
+        <!-- Contexto atual da operação -->
+        <p class="text-gray-600 mb-4">
+            Hoje, a imersão é 100% gratuita com um CPL médio de R$8.
+            A conversão para o "Plano Full" depende exclusivamente de engajamento
+            e nutrição durante o evento.
+        </p>
+
+        <!-- Bloco de risco estratégico -->
+        <div class="bg-red-50 p-4 rounded-lg">
+            <p class="font-semibold text-red-700">❌ Risco:</p>
+            <p class="text-red-600 text-sm">
+                Leads com baixo compromisso psicológico ("só mais um cadastro")
+                diluem a taxa de conversão final.
+            </p>
+        </div>
+    </div>
+
+    <!-- CARD 2: SOLUÇÃO PENNY -->
+    <div class="bg-white p-8 rounded-xl shadow-md border-l-8 border-brand-primary">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">A Solução: Penny Product</h2>
+
+        <!-- Explicação da estratégia -->
+        <p class="text-gray-600 mb-4">
+            Implementar um micro-compromisso financeiro imediato (R$5 ou R$17)
+            na página de obrigado.
+        </p>
+
+        <!-- Insight psicológico -->
+        <div class="bg-indigo-50 p-4 rounded-lg">
+            <p class="font-semibold text-brand-primary">✅ O Insight:</p>
+            <p class="text-indigo-700 text-sm">
+                Quem paga R$5 já não é apenas um lead.
+                <strong>É um cliente.</strong>
+                Isso muda radicalmente a percepção de valor
+                e a probabilidade de upgrade.
+            </p>
+        </div>
+    </div>
+
+</section>
+
 
         <!-- Section 2: Case Study Data -->
         <section class="bg-slate-50 rounded-3xl p-8 md:p-12 border border-slate-200">
@@ -214,6 +264,52 @@
                 </div>
             </div>
         </section>
+<!-- ===================================================== -->
+<!-- SECTION: RECEITA DIRETA VS CUSTO FIXO (BREAK-EVEN 1) -->
+<!-- ===================================================== -->
+<section class="bg-white p-8 rounded-2xl shadow-md">
+
+    <!-- Cabeçalho da seção -->
+    <div class="mb-8">
+        <h2 class="text-3xl font-bold text-gray-800 mb-2">
+            Pagar a Conta: Receita vs Custo Fixo
+        </h2>
+
+        <p class="text-gray-600">
+            O objetivo inicial é abater o custo fixo de R$ 25.000 da imersão.
+            Abaixo, projetamos a receita direta gerada por 1.000 compradores
+            hipotéticos para cada ticket.
+        </p>
+    </div>
+
+    <!-- CONTAINER DO NOVO GRÁFICO -->
+    <div class="chart-container">
+        <canvas id="directRevenueChart"></canvas>
+    </div>
+
+    <!-- Comparativo estratégico -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+
+        <!-- Ticket R$5 -->
+        <div class="bg-blue-50 p-4 rounded border-l-4 border-brand-primary">
+            <p class="font-bold text-brand-primary">Ticket R$ 5,00</p>
+            <p class="text-sm text-gray-700">
+                Gera R$ 5k. Cobre 20% do custo fixo.
+                Precisa de 5.000 vendas para Break-even direto.
+            </p>
+        </div>
+
+        <!-- Ticket R$17 -->
+        <div class="bg-rose-50 p-4 rounded border-l-4 border-brand-secondary">
+            <p class="font-bold text-brand-secondary">Ticket R$ 17,00</p>
+            <p class="text-sm text-gray-700">
+                Gera R$ 17k. Cobre 68% do custo fixo.
+                Break-even com ~1.471 vendas.
+            </p>
+        </div>
+
+    </div>
+</section>
 
         <!-- Section 3: Financial Scenarios (Charts) -->
         <section>
@@ -594,6 +690,60 @@
                 }
             }
         });
+        // =====================================================
+// CHART 4: RECEITA DIRETA VS CUSTO FIXO
+// =====================================================
+
+// Contexto:
+// Simulação considerando 1.000 compradores para cada ticket
+// Custo fixo da operação: R$ 25.000
+
+const ctxDirectRevenue = document.getElementById('directRevenueChart').getContext('2d');
+
+new Chart(ctxDirectRevenue, {
+    type: 'bar',
+    data: {
+        labels: ['Ticket R$ 5', 'Ticket R$ 17'],
+        datasets: [
+            {
+                label: 'Receita com 1.000 compradores',
+                data: [5000, 17000],
+                backgroundColor: ['#4338ca', '#0d9488'],
+                borderRadius: 6
+            },
+            {
+                label: 'Custo Fixo da Imersão',
+                data: [25000, 25000],
+                backgroundColor: '#f59e0b',
+                borderRadius: 6
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'top'
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Valor (R$)'
+                },
+                ticks: {
+                    callback: function(value) {
+                        return 'R$ ' + value;
+                    }
+                }
+            }
+        }
+    }
+});
+
 
     </script>
 </body>
