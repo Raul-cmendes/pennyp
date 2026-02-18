@@ -476,59 +476,67 @@
             </div>
         </section>
 
-        <!-- Section 5: AB Test Structure -->
-        <section>
-            <h2 class="text-3xl font-bold text-slate-900 mb-8 border-l-4 border-brand-secondary pl-4">Estrutura do Teste A/B</h2>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Donut Chart Area -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 lg:col-span-1">
-                    <h3 class="font-bold text-center mb-4 text-slate-700">Divisão de Tráfego</h3>
-                    <div class="chart-container" style="height: 250px;">
-                        <canvas id="splitChart"></canvas>
-                    </div>
-                    <div class="mt-4 text-center text-sm text-slate-500">
-                        Base Total: 100% dos Leads Inscritos
-                    </div>
-                </div>
+     <!-- SEÇÃO 5: DESENHO DO EXPERIMENTO (NO FINAL) -->
+        <section class="space-y-8 pt-12 border-t border-border">
+            <div class="text-center space-y-2">
+                <h2 class="text-2xl font-bold text-white">Desenho Experimental</h2>
+                <p class="text-slate-500 text-sm">Split 50/50 com controle absoluto para validação estatística.</p>
+            </div>
 
-                <!-- Visual Diagram Area -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 lg:col-span-2 flex flex-col justify-center">
-                    <h3 class="font-bold text-center mb-8 text-slate-700">Fluxo de Validação</h3>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 relative">
-                        <!-- Step 1 -->
-                        <div class="text-center relative step-connector p-4">
-                            <div class="w-12 h-12 bg-slate-200 rounded-full flex items-center justify-center text-2xl mx-auto mb-3">👥</div>
-                            <h4 class="font-bold text-slate-800">Lead Inscreve</h4>
-                            <p class="text-xs text-slate-500 mt-1">Origem: Ads/Orgânico</p>
+            <div class="max-w-3xl mx-auto">
+                <!-- Level 1 -->
+                <div class="glass-card p-4 w-48 mx-auto text-center text-sm font-bold border-slate-700">Inscritos (100%)</div>
+                <div class="connector-v"></div>
+                <div class="connector-h max-w-md mx-auto"></div>
+                
+                <!-- Level 2 Branches -->
+                <div class="flex justify-center gap-12 max-w-4xl mx-auto">
+                    <!-- Left: Control -->
+                    <div class="w-1/2 flex flex-col items-center">
+                        <div class="connector-v"></div>
+                        <div class="glass-card p-4 w-full text-center border-dashed opacity-50">
+                            <div class="text-xs font-bold text-slate-500 uppercase">Grupo Controle (50%)</div>
+                            <div class="text-[10px] mt-1 text-slate-600">Sem Popup / Fluxo Padrão</div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Treatment -->
+                    <div class="w-1/2 flex flex-col items-center">
+                        <div class="connector-v"></div>
+                        <div class="glass-card p-4 w-full text-center border-primary/50 bg-primary/5">
+                            <div class="text-xs font-bold text-primary uppercase">Tratamento (50%)</div>
+                            <div class="text-[10px] mt-1 text-primary/70">Popup TYP (R$5 vs R$17)</div>
                         </div>
                         
-                        <!-- Step 2 -->
-                        <div class="text-center relative step-connector p-4">
-                            <div class="w-12 h-12 bg-brand-primary text-white rounded-full flex items-center justify-center text-2xl mx-auto mb-3">⚡</div>
-                            <h4 class="font-bold text-brand-primary">Página Obrigado</h4>
-                            <div class="text-xs mt-2 bg-slate-100 p-2 rounded">
-                                <span class="block font-semibold text-slate-700">Grupo A: Nada</span>
-                                <span class="block font-semibold text-brand-secondary">Grupo B: Popup (R$5/R$17)</span>
-                            </div>
-                        </div>
-
-                        <!-- Step 3 -->
-                        <div class="text-center relative last-step p-4">
-                            <div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-2xl mx-auto mb-3">📊</div>
-                            <h4 class="font-bold text-slate-800">Clusterização</h4>
-                            <ul class="text-xs text-left mt-2 space-y-1 bg-slate-50 p-2 rounded border border-slate-100 inline-block">
-                                <li>• Não Comprador</li>
-                                <li>• Comprador R$ 5</li>
-                                <li>• Comprador R$ 17</li>
-                            </ul>
+                        <div class="connector-v"></div>
+                        <!-- Email Layer -->
+                        <div class="glass-card p-4 w-full text-center border-slate-700 bg-surface">
+                            <div class="text-xs font-bold text-slate-300 uppercase">E-mail Segmentado</div>
+                            <p class="text-[9px] text-slate-500 mt-2">Split interno 50/50: Metade recebe oferta complementar via e-mail pós-pesquisa.</p>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
 
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
+                <div class="text-center p-4">
+                    <div class="text-xs text-slate-500 uppercase mb-1">Duração</div>
+                    <div class="text-sm font-bold text-white">Full Cohort</div>
+                </div>
+                <div class="text-center p-4">
+                    <div class="text-xs text-slate-500 uppercase mb-1">Metodologia</div>
+                    <div class="text-sm font-bold text-white">A/B Split</div>
+                </div>
+                <div class="text-center p-4">
+                    <div class="text-xs text-slate-500 uppercase mb-1">Risco</div>
+                    <div class="text-sm font-bold text-success uppercase">Baixo</div>
+                </div>
+                <div class="text-center p-4">
+                    <div class="text-xs text-slate-500 uppercase mb-1">Status</div>
+                    <div class="text-sm font-bold text-primary uppercase italic">Ready</div>
+                </div>
+            </div>
+        </section>
         <!-- Conclusion -->
         <footer class="text-center py-12 border-t border-slate-200 mt-12">
             <h2 class="text-2xl font-bold text-slate-800 mb-4">Conclusão Estratégica</h2>
