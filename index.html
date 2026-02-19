@@ -44,9 +44,7 @@
       height: 350px;
       max-height: 450px;
     }
-    @media (max-width: 640px) {
-      .chart-container { height: 280px; }
-    }
+    @media (max-width: 640px) { .chart-container { height: 280px; } }
 
     .glass-card {
       background: rgba(255, 255, 255, 0.95);
@@ -85,13 +83,10 @@
 
     /* Remove spinners em inputs number */
     input[type=number]::-webkit-outer-spin-button,
-    input[type=number]::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
+    input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     input[type=number] { -moz-appearance: textfield; }
 
-    /* KPI layout fixes (resolve quebra/órfãos) */
+    /* KPI layout */
     .kpi-card { min-width: 0; }
     .kpi-title {
       font-size: 12px;
@@ -106,6 +101,15 @@
       letter-spacing: -0.02em;
       line-height: 1.05;
       word-break: break-word;
+    }
+
+    /* NOVO: tamanhos menores nos KPIs secundários */
+    .kpi-value--main { font-size: 40px; }     /* só o resultado geral fica grande */
+    .kpi-value--secondary { font-size: 26px; } /* demais ficam menores */
+
+    @media (max-width: 768px) {
+      .kpi-value--main { font-size: 34px; }
+      .kpi-value--secondary { font-size: 22px; }
     }
   </style>
 </head>
@@ -342,35 +346,35 @@
         </div>
       </div>
 
-      <!-- KPI Cards (corrigido: grid sem órfão + títulos pequenos) -->
+      <!-- KPI Cards: só o TOTAL fica em destaque -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
         <div class="glass-card kpi-card p-6 rounded-xl shadow-sm xl:col-span-2">
           <div class="kpi-title">Receita total (penny + full)</div>
-          <div id="kpiTotalRevenue" class="kpi-value text-3xl md:text-4xl font-extrabold text-slate-900 mt-2">—</div>
+          <div id="kpiTotalRevenue" class="kpi-value kpi-value--main font-extrabold text-slate-900 mt-2">—</div>
           <div id="kpiTotalRevenueNote" class="kpi-sub">—</div>
         </div>
 
         <div class="glass-card kpi-card p-6 rounded-xl shadow-sm">
           <div class="kpi-title">RPL</div>
-          <div id="kpiRPL" class="kpi-value text-3xl md:text-4xl font-extrabold text-slate-900 mt-2">—</div>
+          <div id="kpiRPL" class="kpi-value kpi-value--secondary font-extrabold text-slate-900 mt-2">—</div>
           <div id="kpiRPLNote" class="kpi-sub">—</div>
         </div>
 
         <div class="glass-card kpi-card p-6 rounded-xl shadow-sm">
           <div class="kpi-title">CAC líquido (proxy)</div>
-          <div id="kpiNetCAC" class="kpi-value text-3xl md:text-4xl font-extrabold text-slate-900 mt-2">—</div>
+          <div id="kpiNetCAC" class="kpi-value kpi-value--secondary font-extrabold text-slate-900 mt-2">—</div>
           <div id="kpiNetCACNote" class="kpi-sub">—</div>
         </div>
 
         <div class="glass-card kpi-card p-6 rounded-xl shadow-sm">
           <div class="kpi-title">Incremento vs atual</div>
-          <div id="kpiIncrement" class="kpi-value text-3xl md:text-4xl font-extrabold text-slate-900 mt-2">—</div>
+          <div id="kpiIncrement" class="kpi-value kpi-value--secondary font-extrabold text-slate-900 mt-2">—</div>
           <div id="kpiIncrementNote" class="kpi-sub">—</div>
         </div>
 
         <div class="glass-card kpi-card p-6 rounded-xl shadow-sm">
           <div class="kpi-title">Teto de escala (CPA máx proxy)</div>
-          <div id="kpiCPAMax" class="kpi-value text-3xl md:text-4xl font-extrabold text-slate-900 mt-2">—</div>
+          <div id="kpiCPAMax" class="kpi-value kpi-value--secondary font-extrabold text-slate-900 mt-2">—</div>
           <div id="kpiCPAMaxNote" class="kpi-sub">—</div>
         </div>
       </div>
@@ -602,31 +606,28 @@
       return (n || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
 
-    // ===== Model (L1/L2/L3) =====
+    // ===== Model =====
     function computeModel(params) {
       const base = Math.max(1, params.base);
       const cpl = Math.max(0, params.cpl);
       const fixed = Math.max(0, params.fixed);
       const fullTicket = Math.max(0, params.fullTicket);
 
-      const pennyConv = clamp01(params.pennyConv); // decimal
-      const split5 = clamp01(params.split5);       // decimal
+      const pennyConv = clamp01(params.pennyConv);
+      const split5 = clamp01(params.split5);
       const split17 = 1 - split5;
 
-      const fullCtrl = clamp01(params.fullCtrl);   // decimal
-      const buyerUplift = Math.max(1, params.buyerUplift); // x
+      const fullCtrl = clamp01(params.fullCtrl);
+      const buyerUplift = Math.max(1, params.buyerUplift);
       const fullBuyer = clamp01(fullCtrl * buyerUplift);
 
-      // Buyers (penny)
       const buyersTotal = base * pennyConv;
       const buyers5 = buyersTotal * split5;
       const buyers17 = buyersTotal * split17;
 
-      // L1: Penny revenue
       const revenuePenny = buyers5 * 5 + buyers17 * 17;
       const rplPenny = revenuePenny / base;
 
-      // Full revenue: clusters
       const nonBuyers = base - buyersTotal;
 
       const salesCtrl = nonBuyers * fullCtrl;
@@ -637,25 +638,16 @@
       const totalRevenue = revenuePenny + revenueFull;
       const rpl = totalRevenue / base;
 
-      // Baseline (sem penny)
       const revenueCurrent = (base * fullCtrl) * fullTicket;
       const rplCurrent = revenueCurrent / base;
 
-      // Increment
       const deltaRevenue = totalRevenue - revenueCurrent;
       const deltaPct = revenueCurrent > 0 ? (deltaRevenue / revenueCurrent) : 0;
       const deltaRPL = rpl - rplCurrent;
 
-      // L3 proxies
       const fixedPerLead = fixed / base;
-
-      // CPL já inclui mídia/lead.
       const netCAC = cpl - rplPenny;
-
-      // "Teto CPA" proxy
       const cpaMaxProxy = rpl - fixedPerLead;
-
-      // Break-even estrutural
       const beLeads = rpl > 0 ? (fixed / rpl) : Infinity;
 
       return {
@@ -665,11 +657,7 @@
         revenuePenny, revenueFull, totalRevenue,
         revenueCurrent, rpl, rplCurrent,
         deltaRevenue, deltaPct, deltaRPL,
-        rplPenny,
-        netCAC,
-        fixedPerLead,
-        cpaMaxProxy,
-        beLeads,
+        rplPenny, netCAC, fixedPerLead, cpaMaxProxy, beLeads,
         salesCtrl, salesBuyers
       };
     }
@@ -681,10 +669,9 @@
     Chart.defaults.plugins.legend.labels.usePointStyle = true;
 
     let mixBuyersChart, revenueSplitChart;
-    let heatMode = 'rpl'; // 'rpl' | 'margin'
+    let heatMode = 'rpl';
 
     function upsertCharts(model) {
-      // Mix buyers
       const ctxMix = document.getElementById('mixBuyersChart')?.getContext('2d');
       if (ctxMix) {
         const dataMix = [model.buyers5, model.buyers17];
@@ -703,7 +690,6 @@
         }
       }
 
-      // Revenue split
       const ctxRev = document.getElementById('revenueSplitChart')?.getContext('2d');
       if (ctxRev) {
         const penny = model.revenuePenny;
@@ -744,6 +730,7 @@
     function upsertKpis(model) {
       const elTotal = document.getElementById('kpiTotalRevenue');
       const elTotalNote = document.getElementById('kpiTotalRevenueNote');
+
       const elRPL = document.getElementById('kpiRPL');
       const elRPLNote = document.getElementById('kpiRPLNote');
 
@@ -803,7 +790,7 @@
         return `rgba(13, 148, 136, ${alpha})`;
       }
 
-      let html = `
+      const html = `
         <table class="w-full text-sm border-collapse">
           <thead>
             <tr>
@@ -812,33 +799,29 @@
             </tr>
           </thead>
           <tbody>
-            ${ys.map(y => {
-              return `
-                <tr>
-                  <td class="p-3 border-b border-slate-100 bg-white sticky left-0 z-10 font-semibold text-slate-700">
-                    ${(y*100).toFixed(0)}%
-                  </td>
-                  ${xs.map(x => {
-                    const p = { ...baseParams, pennyConv: y, fullCtrl: x };
-                    const m = computeModel(p);
-                    const margin = (m.rpl - m.cpl);
-                    const v = (heatMode === 'rpl') ? m.rpl : margin;
-
-                    const label = formatBRL(v);
-                    const sub = (heatMode === 'rpl')
-                      ? `Margem: ${formatBRL(margin)}`
-                      : `RPL: ${formatBRL(m.rpl)}`;
-
-                    return `
-                      <td class="p-3 border-b border-slate-100 text-center" style="background:${cellBg(v)}">
-                        <div class="font-bold text-slate-900">${label}</div>
-                        <div class="text-xs text-slate-600 mt-1">${sub}</div>
-                      </td>
-                    `;
-                  }).join('')}
-                </tr>
-              `;
-            }).join('')}
+            ${ys.map(y => `
+              <tr>
+                <td class="p-3 border-b border-slate-100 bg-white sticky left-0 z-10 font-semibold text-slate-700">
+                  ${(y*100).toFixed(0)}%
+                </td>
+                ${xs.map(x => {
+                  const p = { ...baseParams, pennyConv: y, fullCtrl: x };
+                  const m = computeModel(p);
+                  const margin = (m.rpl - m.cpl);
+                  const v = (heatMode === 'rpl') ? m.rpl : margin;
+                  const label = formatBRL(v);
+                  const sub = (heatMode === 'rpl')
+                    ? `Margem: ${formatBRL(margin)}`
+                    : `RPL: ${formatBRL(m.rpl)}`;
+                  return `
+                    <td class="p-3 border-b border-slate-100 text-center" style="background:${cellBg(v)}">
+                      <div class="font-bold text-slate-900">${label}</div>
+                      <div class="text-xs text-slate-600 mt-1">${sub}</div>
+                    </td>
+                  `;
+                }).join('')}
+              </tr>
+            `).join('')}
           </tbody>
         </table>
       `;
