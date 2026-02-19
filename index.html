@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Estratégia Penny Product: Modelo (Origem x Exposição)</title>
+  <title>Estratégia Penny Product: Imersão & ROI</title>
 
-  <!-- Tailwind -->
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- Font -->
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
 
   <script>
@@ -21,579 +21,340 @@
           fontFamily: { sans: ['Inter', 'sans-serif'] },
           colors: {
             brand: {
-              bg: '#070A12',
-              panel: '#0B1220',
-              panel2: '#0E1A2B',
-              border: 'rgba(148,163,184,0.14)',
-              text: '#E5E7EB',
-              muted: 'rgba(229,231,235,0.70)',
-              accent: '#22c55e',
-              accent2: '#60a5fa',
-              warn: '#f59e0b',
-              danger: '#ef4444'
-            }
+              dark: '#312e81',
+              primary: '#4338ca',
+              secondary: '#0d9488',
+              accent: '#f59e0b',
+              light: '#e0e7ff',
+              bg: '#f8fafc',
+            },
           },
-          boxShadow: {
-            soft: '0 10px 30px rgba(0,0,0,0.35)'
-          }
-        }
-      }
-    }
+        },
+      },
+    };
   </script>
 
   <style>
-    .mono { font-variant-numeric: tabular-nums; }
-    input[type="number"]::-webkit-outer-spin-button,
-    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-    input[type="number"] { -moz-appearance: textfield; }
+    .chart-container {
+      position: relative;
+      width: 100%;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      height: 350px;
+      max-height: 450px;
+    }
+    @media (max-width: 640px) { .chart-container { height: 280px; } }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #312e81 0%, #0d9488 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .step-connector::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      width: 2px;
+      height: 24px;
+      background-color: #cbd5e1;
+      transform: translateX(-50%);
+      z-index: 0;
+    }
+    .last-step::after { display: none; }
+    @media (min-width: 768px) {
+      .step-connector::after {
+        top: 50%;
+        left: 100%;
+        width: 24px;
+        height: 2px;
+        transform: translateY(-50%);
+      }
+    }
+
+    /* Subtexto KPI */
+    .kpi-sub { font-size: 12px; color: #64748b; margin-top: 6px; line-height: 1.35; }
+
+    /* Remove spinners em inputs number */
+    input[type=number]::-webkit-outer-spin-button,
+    input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; }
+
+    /* KPI helpers */
+    .kpi-hero {
+      font-size: clamp(34px, 4vw, 48px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    .kpi-mini {
+      font-size: clamp(22px, 2.2vw, 28px);
+      line-height: 1.1;
+      letter-spacing: -0.015em;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
   </style>
+
 </head>
 
-<body class="bg-brand-bg text-brand-text font-sans">
-  <header class="max-w-7xl mx-auto px-6 pt-10 pb-6">
-    <div class="flex flex-col gap-2">
-      <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">
-        Penny Product — Modelo (Origem × Exposição)
+<body class="bg-brand-bg text-slate-800 antialiased selection:bg-brand-secondary selection:text-white">
+
+  <!-- Header -->
+  <header class="w-full bg-white shadow-sm border-b border-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-5xl mx-auto text-center">
+      <span class="inline-block py-1 px-3 rounded-full bg-brand-light text-brand-primary text-xs font-bold tracking-wider uppercase mb-4">
+        Estratégia de Monetização
+      </span>
+      <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4">
+        <span class="gradient-text">Penny Product</span> na Imersão
       </h1>
-      <p class="text-brand-muted max-w-3xl">
-        Separação explícita entre <span class="text-white font-semibold">origem (custo de mídia)</span> e
-        <span class="text-white font-semibold">exposição (quem recebe a oferta)</span> para evitar
-        superestimação de receita e subestimação de CAC.
+      <p class="text-lg md:text-xl text-slate-500 max-w-3xl mx-auto">
+        Transformando a página de obrigado em uma alavanca de qualificação, receita antecipada e escala estrutural.
       </p>
     </div>
   </header>
 
-  <main class="max-w-7xl mx-auto px-6 pb-16">
-    <div class="grid lg:grid-cols-12 gap-6">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+
+    <!-- PROBLEMA -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+      <div class="bg-white p-8 rounded-xl shadow-md border-l-8 border-brand-secondary">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">O Problema Atual</h2>
+        <p class="text-gray-600 mb-4">
+          Hoje, a imersão é 100% gratuita com um CPL médio de R$8.
+          A conversão para o "Plano Full" depende exclusivamente de engajamento e nutrição durante o evento.
+        </p>
+        <div class="bg-red-50 p-4 rounded-lg">
+          <p class="font-semibold text-red-700">❌ Risco:</p>
+          <p class="text-red-600 text-sm">
+            Leads com baixo compromisso psicológico ("só mais um cadastro") diluem a taxa de conversão final.
+          </p>
+        </div>
+      </div>
+
+      <div class="bg-white p-8 rounded-xl shadow-md border-l-8 border-brand-primary">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">O Que Muda com o Penny</h2>
+        <p class="text-gray-600 mb-4">
+          A proposta não é “vender barato” — é criar um <strong>micro-compromisso</strong> que
+          segmenta intenção, aumenta <strong>RPL</strong> e eleva o <strong>teto de escala</strong> do tráfego.
+        </p>
+        <div class="bg-emerald-50 p-4 rounded-lg">
+          <p class="font-semibold text-emerald-700">✅ Efeito esperado:</p>
+          <p class="text-emerald-700 text-sm">
+            Compradores do Penny convertem mais no Full + geração de caixa para abater custo e reduzir CAC líquido.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONCEITO -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      <div>
+        <h2 class="text-3xl font-bold text-slate-900 mb-6 border-l-4 border-brand-secondary pl-4">
+          O Que é o Penny Product?
+        </h2>
+        <p class="text-slate-600 mb-4 leading-relaxed">
+          É uma <strong>camada estratégica de qualificação</strong>. Oferta de baixo ticket (R$5 e/ou R$17) apresentada
+          inicialmente (teste 1) na Thank You Page (TYP) da imersão gratuita.
+        </p>
+        <p class="text-slate-600 mb-6 leading-relaxed">
+          Ao criar um micro-compromisso financeiro, identificamos leads com <strong>maior intenção de compra</strong>
+          para o produto principal, enquanto geramos caixa para abater custos operacionais.
+        </p>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-100">
+            <div class="text-brand-primary text-2xl font-bold mb-1">🔍</div>
+            <h3 class="font-semibold text-slate-900">Filtro de Intenção</h3>
+            <p class="text-xs text-slate-500">Quem paga, engaja mais.</p>
+          </div>
+          <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-100">
+            <div class="text-brand-secondary text-2xl font-bold mb-1">💰</div>
+            <h3 class="font-semibold text-slate-900">Receita Antecipada</h3>
+            <p class="text-xs text-slate-500">Cashflow imediato.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-gradient-to-br from-brand-dark to-brand-primary rounded-2xl p-8 text-white shadow-xl relative overflow-hidden">
+        <div class="absolute top-0 right-0 opacity-10 text-9xl font-black -mr-4 -mt-4">R$</div>
+        <h3 class="text-2xl font-bold mb-6">Objetivos Centrais</h3>
+        <ul class="space-y-4">
+          <li class="flex items-start">
+            <span class="flex-shrink-0 h-6 w-6 rounded-full bg-brand-accent flex items-center justify-center text-xs font-bold text-white mt-1 mr-3">1</span>
+            <span><strong>Reduzir Risco:</strong> Diminuir a exposição financeira da operação e de tráfego.</span>
+          </li>
+          <li class="flex items-start">
+            <span class="flex-shrink-0 h-6 w-6 rounded-full bg-brand-accent flex items-center justify-center text-xs font-bold text-white mt-1 mr-3">2</span>
+            <span><strong>Validar Lead:</strong> O cartão de crédito é o melhor validador de interesse.</span>
+          </li>
+          <li class="flex items-start">
+            <span class="flex-shrink-0 h-6 w-6 rounded-full bg-brand-accent flex items-center justify-center text-xs font-bold text-white mt-1 mr-3">3</span>
+            <span><strong>Elevar o Teto:</strong> Aumentar o teto de gasto por lead sustentável (CAC líquido).</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- HISTÓRICO -->
+    <section class="bg-slate-50 rounded-3xl p-8 md:p-12 border border-slate-200">
+      <div class="mb-8">
+        <h2 class="text-2xl font-bold text-slate-900 mb-2">Histórico de Validação: Imersão Unlock</h2>
+        <p class="text-slate-600">
+          A imersão unlock foi um teste de acesso estendido ao conteúdo. Um teste A/B realizado na imersão Agentes de IA (2025)
+          mostra disposição de compra na TYP, mesmo com ticket acima do “penny” tradicional.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="glass-card p-6 rounded-xl shadow-sm text-center transform transition hover:-translate-y-1">
+          <div class="text-sm text-slate-500 font-medium uppercase tracking-wide mb-2">Ticket Médio</div>
+          <div class="text-3xl font-bold text-brand-dark">R$ 79,90</div>
+          <div class="text-xs text-green-600 font-semibold mt-1">Oferta Agentes IA</div>
+        </div>
+
+        <div class="glass-card p-6 rounded-xl shadow-sm text-center transform transition hover:-translate-y-1">
+          <div class="text-sm text-slate-500 font-medium uppercase tracking-wide mb-2">Conversão TYP</div>
+          <div class="text-3xl font-bold text-brand-secondary">1,9%</div>
+          <div class="text-xs text-slate-400 mt-1">Imediata</div>
+        </div>
+
+        <div class="glass-card p-6 rounded-xl shadow-sm text-center transform transition hover:-translate-y-1">
+          <div class="text-sm text-slate-500 font-medium uppercase tracking-wide mb-2">Compradores</div>
+          <div class="text-3xl font-bold text-slate-800">79</div>
+          <div class="text-xs text-slate-400 mt-1">Total de Vendas</div>
+        </div>
+
+        <div class="glass-card p-6 rounded-xl shadow-sm text-center transform transition hover:-translate-y-1">
+          <div class="text-sm text-slate-500 font-medium uppercase tracking-wide mb-2">Perfil</div>
+          <div class="text-3xl font-bold text-brand-accent">85%</div>
+          <div class="text-xs text-slate-400 mt-1">Não eram alunos</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAINEL EXECUTIVO -->
+    <section class="bg-white p-8 rounded-2xl shadow-md border border-slate-100">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-8">
+        <div>
+          <h2 class="text-3xl font-bold text-slate-900 mb-2 border-l-4 border-brand-secondary pl-4">
+            Resultado Esperado (L1/L2/L3 + Mix + Sensibilidade)
+          </h2>
+          <p class="text-slate-600 max-w-3xl">
+            Painel vivo baseado nas premissas do modelo. Ajuste taxas e veja impacto em:
+            <strong>monetização imediata (L1)</strong>, <strong>qualificação (L2)</strong> e <strong>teto de escala (L3)</strong>.
+          </p>
+        </div>
+
+        <div class="text-xs text-slate-500 bg-slate-50 border border-slate-200 rounded-xl p-4">
+          <div class="font-semibold text-slate-700 mb-1">Leitura rápida</div>
+          <div>• <strong>RPL</strong> = Receita Total / Inscritos</div>
+          <div>• <strong>CAC líquido (proxy)</strong> = (CPL × SharePago) − (Receita Penny / Inscritos)</div>
+          <div>• <strong>Teto CPA (proxy)</strong> ≈ RPL − (Custo fixo/lead)</div>
+        </div>
+      </div>
+
       <!-- Inputs -->
-      <section class="lg:col-span-4">
-        <div class="bg-brand-panel border border-brand-border rounded-2xl shadow-soft p-5">
-          <div class="flex items-center justify-between">
-            <h2 class="text-lg font-bold">Inputs do Modelo</h2>
-            <button id="btnReset" class="text-sm px-3 py-1.5 rounded-xl border border-brand-border hover:bg-white/5 transition">
-              Reset
-            </button>
-          </div>
-
-          <div class="mt-4 space-y-5">
-            <!-- Base -->
-            <div class="bg-brand-panel2 border border-brand-border rounded-2xl p-4">
-              <div class="flex items-center justify-between">
-                <h3 class="font-semibold">Base & Exposição</h3>
-                <span class="text-xs text-brand-muted">escopo</span>
-              </div>
-
-              <div class="mt-3 grid grid-cols-2 gap-3">
-                <label class="block">
-                  <span class="text-xs text-brand-muted">Base total (inscritos)</span>
-                  <input id="B" type="number" min="0" step="1"
-                         class="mt-1 w-full rounded-xl bg-black/20 border border-brand-border px-3 py-2 outline-none focus:ring-2 focus:ring-white/10"
-                         value="87000" />
-                </label>
-
-                <label class="block">
-                  <span class="text-xs text-brand-muted">% base que recebe a oferta</span>
-                  <input id="E" type="number" min="0" max="100" step="1"
-                         class="mt-1 w-full rounded-xl bg-black/20 border border-brand-border px-3 py-2 outline-none focus:ring-2 focus:ring-white/10"
-                         value="50" />
-                </label>
-              </div>
-
-              <div class="mt-3 grid grid-cols-2 gap-3">
-                <div class="rounded-xl bg-black/20 border border-brand-border p-3">
-                  <div class="text-xs text-brand-muted">Base exposta</div>
-                  <div id="B_exp" class="mono text-lg font-bold mt-1">—</div>
-                </div>
-                <div class="rounded-xl bg-black/20 border border-brand-border p-3">
-                  <div class="text-xs text-brand-muted">Base não exposta</div>
-                  <div id="B_nexp" class="mono text-lg font-bold mt-1">—</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Mídia -->
-            <div class="bg-brand-panel2 border border-brand-border rounded-2xl p-4">
-              <div class="flex items-center justify-between">
-                <h3 class="font-semibold">Origem & Mídia</h3>
-                <span class="text-xs text-brand-muted">custo</span>
-              </div>
-
-              <div class="mt-3 grid grid-cols-2 gap-3">
-                <label class="block">
-                  <span class="text-xs text-brand-muted">% share mídia paga</span>
-                  <input id="S" type="number" min="0" max="100" step="1"
-                         class="mt-1 w-full rounded-xl bg-black/20 border border-brand-border px-3 py-2 outline-none focus:ring-2 focus:ring-white/10"
-                         value="60" />
-                </label>
-
-                <label class="block">
-                  <span class="text-xs text-brand-muted">CPL médio (R$)</span>
-                  <input id="CPL" type="number" min="0" step="0.01"
-                         class="mt-1 w-full rounded-xl bg-black/20 border border-brand-border px-3 py-2 outline-none focus:ring-2 focus:ring-white/10"
-                         value="8" />
-                  <div class="mt-2 text-xs text-brand-muted">
-                    Custo total de mídia:
-                    <span id="Cost_media" class="mono font-semibold text-white">—</span>
-                  </div>
-                </label>
-              </div>
-
-              <div class="mt-3 grid grid-cols-2 gap-3">
-                <div class="rounded-xl bg-black/20 border border-brand-border p-3">
-                  <div class="text-xs text-brand-muted">Inscritos pagos</div>
-                  <div id="B_paid" class="mono text-lg font-bold mt-1">—</div>
-                </div>
-                <div class="rounded-xl bg-black/20 border border-brand-border p-3">
-                  <div class="text-xs text-brand-muted">Inscritos orgânicos</div>
-                  <div id="B_org" class="mono text-lg font-bold mt-1">—</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Penny -->
-            <div class="bg-brand-panel2 border border-brand-border rounded-2xl p-4">
-              <div class="flex items-center justify-between">
-                <h3 class="font-semibold">Penny (L1)</h3>
-                <span class="text-xs text-brand-muted">receita imediata</span>
-              </div>
-
-              <div class="mt-3 grid grid-cols-2 gap-3">
-                <label class="block">
-                  <span class="text-xs text-brand-muted">Conv. penny (sobre expostos) %</span>
-                  <input id="p_penny" type="number" min="0" max="100" step="0.1"
-                         class="mt-1 w-full rounded-xl bg-black/20 border border-brand-border px-3 py-2 outline-none focus:ring-2 focus:ring-white/10"
-                         value="6" />
-                </label>
-
-                <label class="block">
-                  <span class="text-xs text-brand-muted">Split R$5 (% dos penny)</span>
-                  <input id="s5" type="number" min="0" max="100" step="1"
-                         class="mt-1 w-full rounded-xl bg-black/20 border border-brand-border px-3 py-2 outline-none focus:ring-2 focus:ring-white/10"
-                         value="70" />
-                </label>
-              </div>
-
-              <div class="mt-3 grid grid-cols-2 gap-3">
-                <div class="rounded-xl bg-black/20 border border-brand-border p-3">
-                  <div class="text-xs text-brand-muted">Compradores penny</div>
-                  <div id="N_penny" class="mono text-lg font-bold mt-1">—</div>
-                  <div class="text-xs text-brand-muted mt-1">R$5: <span id="N_5" class="mono text-white font-semibold">—</span> • R$17: <span id="N_17" class="mono text-white font-semibold">—</span></div>
-                </div>
-                <div class="rounded-xl bg-black/20 border border-brand-border p-3">
-                  <div class="text-xs text-brand-muted">Receita penny</div>
-                  <div id="Rev_penny" class="mono text-lg font-bold mt-1">—</div>
-                  <div class="text-xs text-brand-muted mt-1">Ticket médio penny: <span id="ARPP_penny" class="mono text-white font-semibold">—</span></div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Full -->
-            <div class="bg-brand-panel2 border border-brand-border rounded-2xl p-4">
-              <div class="flex items-center justify-between">
-                <h3 class="font-semibold">Full (L2)</h3>
-                <span class="text-xs text-brand-muted">qualificação</span>
-              </div>
-
-              <div class="mt-3 grid grid-cols-2 gap-3">
-                <label class="block">
-                  <span class="text-xs text-brand-muted">Conv. full controle %</span>
-                  <input id="p_full_ctrl" type="number" min="0" max="100" step="0.01"
-                         class="mt-1 w-full rounded-xl bg-black/20 border border-brand-border px-3 py-2 outline-none focus:ring-2 focus:ring-white/10"
-                         value="0.66" />
-                </label>
-
-                <label class="block">
-                  <span class="text-xs text-brand-muted">Uplift comprador→full (x)</span>
-                  <input id="U" type="number" min="1" step="0.01"
-                         class="mt-1 w-full rounded-xl bg-black/20 border border-brand-border px-3 py-2 outline-none focus:ring-2 focus:ring-white/10"
-                         value="2.0" />
-                </label>
-              </div>
-
-              <div class="mt-3 grid grid-cols-2 gap-3">
-                <label class="block">
-                  <span class="text-xs text-brand-muted">Canibalização no exposto (%)</span>
-                  <input id="k" type="number" min="0" max="100" step="1"
-                         class="mt-1 w-full rounded-xl bg-black/20 border border-brand-border px-3 py-2 outline-none focus:ring-2 focus:ring-white/10"
-                         value="10" />
-                </label>
-
-                <label class="block">
-                  <span class="text-xs text-brand-muted">Ticket Full (R$)</span>
-                  <input id="P_full" type="number" min="0" step="1"
-                         class="mt-1 w-full rounded-xl bg-black/20 border border-brand-border px-3 py-2 outline-none focus:ring-2 focus:ring-white/10"
-                         value="1200" />
-                </label>
-              </div>
-
-              <div class="mt-3 grid grid-cols-2 gap-3">
-                <div class="rounded-xl bg-black/20 border border-brand-border p-3">
-                  <div class="text-xs text-brand-muted">Full incremental (penny)</div>
-                  <div id="N_full_incr" class="mono text-lg font-bold mt-1">—</div>
-                  <div class="text-xs text-brand-muted mt-1">Full base exposto: <span id="N_full_exp_base" class="mono text-white font-semibold">—</span></div>
-                </div>
-                <div class="rounded-xl bg-black/20 border border-brand-border p-3">
-                  <div class="text-xs text-brand-muted">Full total</div>
-                  <div id="N_full_total" class="mono text-lg font-bold mt-1">—</div>
-                  <div class="text-xs text-brand-muted mt-1">Receita full: <span id="Rev_full" class="mono text-white font-semibold">—</span></div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Custos -->
-            <div class="bg-brand-panel2 border border-brand-border rounded-2xl p-4">
-              <div class="flex items-center justify-between">
-                <h3 class="font-semibold">Custos (L3)</h3>
-                <span class="text-xs text-brand-muted">eficiência</span>
-              </div>
-
-              <div class="mt-3 grid grid-cols-2 gap-3">
-                <label class="block">
-                  <span class="text-xs text-brand-muted">Custo fixo operacional (R$)</span>
-                  <input id="F" type="number" min="0" step="100"
-                         class="mt-1 w-full rounded-xl bg-black/20 border border-brand-border px-3 py-2 outline-none focus:ring-2 focus:ring-white/10"
-                         value="25000" />
-                </label>
-
-                <div class="rounded-xl bg-black/20 border border-brand-border p-3">
-                  <div class="text-xs text-brand-muted">Custo total (mídia + fixo)</div>
-                  <div id="Cost_total" class="mono text-lg font-bold mt-1">—</div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
+          <div class="text-xs font-semibold text-slate-600 mb-2">Base total (inscritos)</div>
+          <input id="inpBase" type="number" value="41000" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
+          <div class="text-xs text-slate-500 mt-2">Agora é 100% da base considerada no modelo.</div>
         </div>
-      </section>
 
-      <!-- Outputs -->
-      <section class="lg:col-span-8">
-        <div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-6">
-          <div class="bg-brand-panel border border-brand-border rounded-2xl shadow-soft p-5">
-            <div class="text-xs text-brand-muted">Receita Total</div>
-            <div id="Rev_total" class="mono text-2xl font-extrabold mt-2">—</div>
-            <div class="text-xs text-brand-muted mt-2">Penny + Full</div>
-          </div>
+        <!-- NOVO: % exposta -->
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
+          <div class="text-xs font-semibold text-slate-600 mb-2">% da base que recebe a oferta</div>
+          <input id="inpExposure" type="number" min="0" max="100" step="1" value="50" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
+          <div class="text-xs text-slate-500 mt-2">Penny só aplica sobre essa fatia (ex.: 50%).</div>
+        </div>
 
-          <div class="bg-brand-panel border border-brand-border rounded-2xl shadow-soft p-5">
-            <div class="text-xs text-brand-muted">CAC Full</div>
-            <div id="CAC_full" class="mono text-2xl font-extrabold mt-2">—</div>
-            <div class="text-xs text-brand-muted mt-2">Cost_total / Full_total</div>
-          </div>
+        <!-- NOVO: share pago -->
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
+          <div class="text-xs font-semibold text-slate-600 mb-2">% share de mídia paga</div>
+          <input id="inpPaidShare" type="number" min="0" max="100" step="1" value="60" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
+          <div class="text-xs text-slate-500 mt-2">Define o volume que “carrega” custo via CPL.</div>
+        </div>
 
-          <div class="bg-brand-panel border border-brand-border rounded-2xl shadow-soft p-5">
-            <div class="text-xs text-brand-muted">RPL (Receita por inscrito)</div>
-            <div id="RPL" class="mono text-2xl font-extrabold mt-2">—</div>
-            <div class="text-xs text-brand-muted mt-2">Rev_total / Base_total</div>
-          </div>
-
-          <div class="bg-brand-panel border border-brand-border rounded-2xl shadow-soft p-5">
-            <div class="text-xs text-brand-muted">RPL Líquido</div>
-            <div id="RPL_net" class="mono text-2xl font-extrabold mt-2">—</div>
-            <div class="text-xs text-brand-muted mt-2">(Rev_total - Cost_total) / Base</div>
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
+          <div class="text-xs font-semibold text-slate-600 mb-2">CPL médio (R$)</div>
+          <input id="inpCPL" type="number" step="0.01" value="8" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
+          <div class="text-xs text-slate-500 mt-2">
+            Custo total de mídia:
+            <strong id="outMediaCost">—</strong>
           </div>
         </div>
 
-        <div class="grid lg:grid-cols-2 gap-6 mt-6">
-          <div class="bg-brand-panel border border-brand-border rounded-2xl shadow-soft p-5">
-            <div class="flex items-center justify-between">
-              <h3 class="font-bold">Receita (Penny vs Full)</h3>
-              <span class="text-xs text-brand-muted">R$</span>
-            </div>
-            <div class="mt-4">
-              <canvas id="chartRevenue" height="140"></canvas>
-            </div>
-          </div>
-
-          <div class="bg-brand-panel border border-brand-border rounded-2xl shadow-soft p-5">
-            <div class="flex items-center justify-between">
-              <h3 class="font-bold">Custos (Mídia vs Fixo)</h3>
-              <span class="text-xs text-brand-muted">R$</span>
-            </div>
-            <div class="mt-4">
-              <canvas id="chartCosts" height="140"></canvas>
-            </div>
-          </div>
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
+          <div class="text-xs font-semibold text-slate-600 mb-2">Custo fixo (R$)</div>
+          <input id="inpFixed" type="number" value="25000" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
+          <div class="text-xs text-slate-500 mt-2">Break-even estrutural</div>
         </div>
 
-        <div class="grid lg:grid-cols-3 gap-6 mt-6">
-          <div class="bg-brand-panel border border-brand-border rounded-2xl shadow-soft p-5 lg:col-span-2">
-            <div class="flex items-center justify-between">
-              <h3 class="font-bold">Volume (Base → Penny → Full)</h3>
-              <span class="text-xs text-brand-muted">pessoas</span>
-            </div>
-            <div class="mt-4">
-              <canvas id="chartFunnel" height="140"></canvas>
-            </div>
-          </div>
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
+          <div class="text-xs font-semibold text-slate-600 mb-2">Ticket Plano Full (R$)</div>
+          <input id="inpFullTicket" type="number" value="1200" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
+          <div class="text-xs text-slate-500 mt-2">TM usado no modelo</div>
+        </div>
 
-          <div class="bg-brand-panel border border-brand-border rounded-2xl shadow-soft p-5">
-            <div class="text-xs text-brand-muted">Notas de leitura</div>
-            <ul class="mt-3 text-sm text-brand-muted space-y-2">
-              <li>• <span class="text-white font-semibold">Custo de mídia</span> depende apenas de <span class="text-white font-semibold">share pago</span> e <span class="text-white font-semibold">CPL</span>.</li>
-              <li>• <span class="text-white font-semibold">Penny</span> só existe na <span class="text-white font-semibold">base exposta</span>.</li>
-              <li>• <span class="text-white font-semibold">Uplift</span> afeta apenas quem <span class="text-white font-semibold">comprou penny</span>.</li>
-              <li>• Canibalização reduz o <span class="text-white font-semibold">full base</span> no grupo exposto.</li>
-            </ul>
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
+          <div class="text-xs font-semibold text-slate-600 mb-2">% Conversão Penny (sobre expostos)</div>
+          <input id="inpPennyConv" type="number" step="0.01" value="2.44" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
+          <div class="text-xs text-slate-500 mt-2">Aplica em BaseExposta</div>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
+          <div class="text-xs font-semibold text-slate-600 mb-2">Split: % escolhe R$5</div>
+          <input id="inpSplit5" type="number" step="1" value="70" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
+          <div class="text-xs text-slate-500 mt-2">R$17 = 100 - R$5</div>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
+          <div class="text-xs font-semibold text-slate-600 mb-2">Conv. Full (controle)</div>
+          <input id="inpFullCtrl" type="number" step="0.01" value="0.80" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
+          <div class="text-xs text-slate-500 mt-2">Sem penny</div>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
+          <div class="text-xs font-semibold text-slate-600 mb-2">Uplift comprador → Full (x)</div>
+          <input id="inpBuyerUplift" type="number" min="1" step="0.1" value="3.8" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
+          <div class="text-xs text-slate-500 mt-2">Ex: 3,8× mais que o controle</div>
+        </div>
+      </div>
+
+      <!-- Guardrails -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-10">
+        <div class="bg-white border border-slate-200 rounded-xl p-4 min-w-0">
+          <div class="text-xs font-semibold text-slate-700 mb-2">Guardrail (Downside)</div>
+          <div class="text-xs text-slate-600">
+            O penny só é mostrado para a <strong>Base Exposta</strong>. O restante segue fluxo padrão.
+            Isso evita superestimar receita por “aplicar penny em 100%”.
           </div>
         </div>
-      </section>
-    </div>
-  </main>
+        <div class="bg-white border border-slate-200 rounded-xl p-4 min-w-0">
+          <div class="text-xs font-semibold text-slate-700 mb-2">Origem define custo</div>
+          <div class="text-xs text-slate-600">
+            O custo de mídia vem do <strong>share pago</strong>. O penny não altera custo — altera receita/qualificação.
+          </div>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-xl p-4 min-w-0">
+          <div class="text-xs font-semibold text-slate-700 mb-2">O que importa</div>
+          <div class="text-xs text-slate-600">
+            <strong>L1:</strong> Receita Penny • <strong>L2:</strong> Uplift comprador no Full • <strong>L3:</strong> Teto CPA e CAC líquido (proxy).
+          </div>
+        </div>
+      </div>
 
-  <script>
-    // ---------- Helpers ----------
-    const brl = (v) => {
-      const n = Number.isFinite(v) ? v : 0;
-      return n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
-    };
-    const brl2 = (v) => {
-      const n = Number.isFinite(v) ? v : 0;
-      return n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    };
-    const intfmt = (v) => (Number.isFinite(v) ? Math.round(v).toLocaleString('pt-BR') : '0');
-    const pctToUnit = (p) => Math.max(0, Math.min(1, (Number(p) || 0) / 100));
-
-    const $ = (id) => document.getElementById(id);
-
-    function readInputs() {
-      const B = Math.max(0, Number($('B').value) || 0);
-
-      const E = pctToUnit($('E').value);
-      const S = pctToUnit($('S').value);
-
-      const CPL = Math.max(0, Number($('CPL').value) || 0);
-      const F = Math.max(0, Number($('F').value) || 0);
-
-      const p_penny = pctToUnit($('p_penny').value);
-      const s5 = pctToUnit($('s5').value);
-
-      const p_full_ctrl = pctToUnit($('p_full_ctrl').value);
-      const U = Math.max(1, Number($('U').value) || 1);
-
-      const k = pctToUnit($('k').value);
-      const P_full = Math.max(0, Number($('P_full').value) || 0);
-
-      return { B, E, S, CPL, F, p_penny, s5, p_full_ctrl, U, k, P_full };
-    }
-
-    function computeModel(inp) {
-      const { B, E, S, CPL, F, p_penny, s5, p_full_ctrl, U, k, P_full } = inp;
-
-      // Origem (Custo)
-      const B_paid = B * S;
-      const B_org = B - B_paid;
-      const Cost_media = B_paid * CPL;
-      const Cost_total = Cost_media + F;
-
-      // Exposição (Receita)
-      const B_exp = B * E;
-      const B_nexp = B - B_exp;
-
-      // Penny (L1)
-      const N_penny = B_exp * p_penny;
-      const N_5 = N_penny * s5;
-      const N_17 = N_penny * (1 - s5);
-      const Rev_penny = (N_5 * 5) + (N_17 * 17);
-      const ARPP_penny = N_penny > 0 ? (Rev_penny / N_penny) : 0;
-
-      // Full (L2)
-      const N_full_nexp = B_nexp * p_full_ctrl;
-
-      const p_full_exp_base = p_full_ctrl * (1 - k);
-      const N_full_exp_base = B_exp * p_full_exp_base;
-
-      // incremental: compradores do penny têm propensão maior
-      const p_incr = p_full_ctrl * (U - 1);
-      const N_full_incr = N_penny * p_incr;
-
-      const N_full_total = N_full_nexp + N_full_exp_base + N_full_incr;
-      const Rev_full = N_full_total * P_full;
-
-      // Totais
-      const Rev_total = Rev_penny + Rev_full;
-
-      // Eficiência (L3)
-      const CAC_full = N_full_total > 0 ? (Cost_total / N_full_total) : 0;
-      const RPL = B > 0 ? (Rev_total / B) : 0;
-      const RPL_net = B > 0 ? ((Rev_total - Cost_total) / B) : 0;
-
-      return {
-        B_paid, B_org, Cost_media, Cost_total,
-        B_exp, B_nexp,
-        N_penny, N_5, N_17, Rev_penny, ARPP_penny,
-        N_full_nexp, N_full_exp_base, N_full_incr, N_full_total, Rev_full,
-        Rev_total, CAC_full, RPL, RPL_net
-      };
-    }
-
-    // ---------- Charts ----------
-    let chartRevenue, chartCosts, chartFunnel;
-
-    function makeChart(ctx, cfg) {
-      return new Chart(ctx, cfg);
-    }
-
-    function initCharts() {
-      const ctxRev = $('chartRevenue').getContext('2d');
-      const ctxCost = $('chartCosts').getContext('2d');
-      const ctxFun = $('chartFunnel').getContext('2d');
-
-      chartRevenue = makeChart(ctxRev, {
-        type: 'bar',
-        data: {
-          labels: ['Penny', 'Full'],
-          datasets: [{
-            label: 'Receita',
-            data: [0, 0],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: { label: (c) => brl(c.parsed.y) }
-            }
-          },
-          scales: {
-            y: {
-              ticks: {
-                callback: (v) => (Number(v) || 0).toLocaleString('pt-BR')
-              }
-            }
-          }
-        }
-      });
-
-      chartCosts = makeChart(ctxCost, {
-        type: 'bar',
-        data: {
-          labels: ['Mídia', 'Fixo'],
-          datasets: [{
-            label: 'Custos',
-            data: [0, 0],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: { label: (c) => brl(c.parsed.y) }
-            }
-          },
-          scales: {
-            y: {
-              ticks: {
-                callback: (v) => (Number(v) || 0).toLocaleString('pt-BR')
-              }
-            }
-          }
-        }
-      });
-
-      chartFunnel = makeChart(ctxFun, {
-        type: 'bar',
-        data: {
-          labels: ['Base total', 'Base exposta', 'Penny', 'Full total'],
-          datasets: [{
-            label: 'Volume',
-            data: [0, 0, 0, 0],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: { label: (c) => intfmt(c.parsed.y) + ' pessoas' }
-            }
-          },
-          scales: {
-            y: {
-              ticks: { callback: (v) => (Number(v) || 0).toLocaleString('pt-BR') }
-            }
-          }
-        }
-      });
-    }
-
-    // ---------- Render ----------
-    function render() {
-      const inp = readInputs();
-      const out = computeModel(inp);
-
-      // Base & Exposição
-      $('B_exp').textContent = intfmt(out.B_exp);
-      $('B_nexp').textContent = intfmt(out.B_nexp);
-
-      // Origem & Mídia
-      $('B_paid').textContent = intfmt(out.B_paid);
-      $('B_org').textContent = intfmt(out.B_org);
-      $('Cost_media').textContent = brl(out.Cost_media);
-      $('Cost_total').textContent = brl(out.Cost_total);
-
-      // Penny
-      $('N_penny').textContent = intfmt(out.N_penny);
-      $('N_5').textContent = intfmt(out.N_5);
-      $('N_17').textContent = intfmt(out.N_17);
-      $('Rev_penny').textContent = brl(out.Rev_penny);
-      $('ARPP_penny').textContent = brl2(out.ARPP_penny);
-
-      // Full
-      $('N_full_incr').textContent = intfmt(out.N_full_incr);
-      $('N_full_exp_base').textContent = intfmt(out.N_full_exp_base);
-      $('N_full_total').textContent = intfmt(out.N_full_total);
-      $('Rev_full').textContent = brl(out.Rev_full);
-
-      // Top cards
-      $('Rev_total').textContent = brl(out.Rev_total);
-      $('CAC_full').textContent = brl2(out.CAC_full);
-      $('RPL').textContent = brl2(out.RPL);
-      $('RPL_net').textContent = brl2(out.RPL_net);
-
-      // Charts
-      if (chartRevenue) {
-        chartRevenue.data.datasets[0].data = [out.Rev_penny, out.Rev_full];
-        chartRevenue.update();
-      }
-      if (chartCosts) {
-        chartCosts.data.datasets[0].data = [out.Cost_media, inp.F];
-        chartCosts.update();
-      }
-      if (chartFunnel) {
-        chartFunnel.data.datasets[0].data = [inp.B, out.B_exp, out.N_penny, out.N_full_total];
-        chartFunnel.update();
-      }
-    }
-
-    function bind() {
-      const ids = ['B','E','S','CPL','F','p_penny','s5','p_full_ctrl','U','k','P_full'];
-      ids.forEach(id => $(id).addEventListener('input', render));
-
-      $('btnReset').addEventListener('click', () => {
-        $('B').value = 87000;
-        $('E').value = 50;
-        $('S').value = 60;
-        $('CPL').value = 8;
-        $('F').value = 25000;
-        $('p_penny').value = 6;
-        $('s5').value = 70;
-        $('p_full_ctrl').value = 0.66;
-        $('U').value = 2.0;
-        $('k').value = 10;
-        $('P_full').value = 1200;
-        render();
-      });
-    }
-
-    // Boot
-    initCharts();
-    bind();
-    render();
-  </script>
-</body>
-</html>
+      <!-- KPI Cards -->
+      <div class="space-y-6">
+        <div class="grid grid-cols-1">
+          <div class="glass-card p-6 rounded-xl shadow-sm">
+            <div class="text-xs text-slate-500 font-semibold u
