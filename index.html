@@ -111,7 +111,31 @@
       .kpi-value--main { font-size: 34px; }
       .kpi-value--secondary { font-size: 22px; }
     }
-  </style>
+    <style>
+  /* ...seu CSS atual... */
+
+  /* KPI helpers */
+  .kpi-sub { font-size: 12px; color: #64748b; margin-top: 6px; line-height: 1.35; }
+
+  /* Um número bem grande só pro card principal */
+  .kpi-hero {
+    font-size: clamp(34px, 4vw, 48px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  /* Números menores para os cards secundários (sem quebra) */
+  .kpi-mini {
+    font-size: clamp(22px, 2.2vw, 28px);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+</style>
+
 </head>
 
 <body class="bg-brand-bg text-slate-800 antialiased selection:bg-brand-secondary selection:text-white">
@@ -346,38 +370,65 @@
         </div>
       </div>
 
-      <!-- KPI Cards: só o TOTAL fica em destaque -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
-        <div class="glass-card kpi-card p-6 rounded-xl shadow-sm xl:col-span-2">
-          <div class="kpi-title">Receita total (penny + full)</div>
-          <div id="kpiTotalRevenue" class="kpi-value kpi-value--main font-extrabold text-slate-900 mt-2">—</div>
-          <div id="kpiTotalRevenueNote" class="kpi-sub">—</div>
-        </div>
+<!-- KPI Cards (hierarquia corrigida) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
 
-        <div class="glass-card kpi-card p-6 rounded-xl shadow-sm">
-          <div class="kpi-title">RPL</div>
-          <div id="kpiRPL" class="kpi-value kpi-value--secondary font-extrabold text-slate-900 mt-2">—</div>
-          <div id="kpiRPLNote" class="kpi-sub">—</div>
-        </div>
+  <!-- CARD PRINCIPAL (hero): Receita total -->
+  <div class="glass-card p-6 rounded-xl shadow-sm lg:col-span-2">
+    <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-2">
+      Receita total (penny + full)
+    </div>
 
-        <div class="glass-card kpi-card p-6 rounded-xl shadow-sm">
-          <div class="kpi-title">CAC líquido (proxy)</div>
-          <div id="kpiNetCAC" class="kpi-value kpi-value--secondary font-extrabold text-slate-900 mt-2">—</div>
-          <div id="kpiNetCACNote" class="kpi-sub">—</div>
-        </div>
+    <div id="kpiTotalRevenue" class="kpi-hero text-slate-900">—</div>
 
-        <div class="glass-card kpi-card p-6 rounded-xl shadow-sm">
-          <div class="kpi-title">Incremento vs atual</div>
-          <div id="kpiIncrement" class="kpi-value kpi-value--secondary font-extrabold text-slate-900 mt-2">—</div>
-          <div id="kpiIncrementNote" class="kpi-sub">—</div>
-        </div>
+    <div id="kpiTotalRevenueNote" class="kpi-sub">
+      — 
+    </div>
+  </div>
 
-        <div class="glass-card kpi-card p-6 rounded-xl shadow-sm">
-          <div class="kpi-title">Teto de escala (CPA máx proxy)</div>
-          <div id="kpiCPAMax" class="kpi-value kpi-value--secondary font-extrabold text-slate-900 mt-2">—</div>
-          <div id="kpiCPAMaxNote" class="kpi-sub">—</div>
-        </div>
-      </div>
+  <!-- Secundário: RPL -->
+  <div class="glass-card p-6 rounded-xl shadow-sm min-w-0">
+    <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-2">
+      RPL
+    </div>
+
+    <div id="kpiRPL" class="kpi-mini text-slate-900">—</div>
+    <div id="kpiRPLNote" class="kpi-sub">—</div>
+  </div>
+
+  <!-- Secundário: CAC líquido -->
+  <div class="glass-card p-6 rounded-xl shadow-sm min-w-0">
+    <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-2">
+      CAC líquido (proxy)
+    </div>
+
+    <div id="kpiNetCAC" class="kpi-mini text-slate-900">—</div>
+    <div id="kpiNetCACNote" class="kpi-sub">—</div>
+  </div>
+
+  <!-- Secundário: Incremento -->
+  <div class="glass-card p-6 rounded-xl shadow-sm min-w-0">
+    <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-2">
+      Incremento vs atual
+    </div>
+
+    <!-- O segredo pra não quebrar: nowrap + tabular nums (já no helper) -->
+    <div id="kpiIncrement" class="kpi-mini text-slate-900">—</div>
+    <div id="kpiIncrementNote" class="kpi-sub">—</div>
+  </div>
+
+  <!-- Secundário: Teto -->
+  <div class="glass-card p-6 rounded-xl shadow-sm min-w-0">
+    <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-2">
+      Teto de escala (CPA máx proxy)
+    </div>
+
+    <div id="kpiCPAMax" class="kpi-mini text-slate-900">—</div>
+    <div id="kpiCPAMaxNote" class="kpi-sub">—</div>
+  </div>
+
+</div>
+
 
       <!-- Charts -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-10">
