@@ -102,7 +102,6 @@
       white-space: nowrap;
     }
   </style>
-
 </head>
 
 <body class="bg-brand-bg text-slate-800 antialiased selection:bg-brand-secondary selection:text-white">
@@ -266,31 +265,26 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
           <div class="text-xs font-semibold text-slate-600 mb-2">Base total (inscritos)</div>
-          <input id="inpBase" type="number" value="41000" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
+          <input id="inpBase" type="number" value="100000" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
           <div class="text-xs text-slate-500 mt-2">Agora é 100% da base considerada no modelo.</div>
         </div>
 
-        <!-- NOVO: % exposta -->
         <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
           <div class="text-xs font-semibold text-slate-600 mb-2">% da base que recebe a oferta</div>
-          <input id="inpExposure" type="number" min="0" max="100" step="1" value="50" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
+          <input id="inpExposure" type="number" step="1" value="50" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
           <div class="text-xs text-slate-500 mt-2">Penny só aplica sobre essa fatia (ex.: 50%).</div>
         </div>
 
-        <!-- NOVO: share pago -->
         <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
           <div class="text-xs font-semibold text-slate-600 mb-2">% share de mídia paga</div>
-          <input id="inpPaidShare" type="number" min="0" max="100" step="1" value="60" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
+          <input id="inpPaidShare" type="number" step="1" value="60" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
           <div class="text-xs text-slate-500 mt-2">Define o volume que “carrega” custo via CPL.</div>
         </div>
 
         <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
           <div class="text-xs font-semibold text-slate-600 mb-2">CPL médio (R$)</div>
           <input id="inpCPL" type="number" step="0.01" value="8" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
-          <div class="text-xs text-slate-500 mt-2">
-            Custo total de mídia:
-            <strong id="outMediaCost">—</strong>
-          </div>
+          <div id="cplMediaTotal" class="text-xs text-slate-500 mt-2">Custo total de mídia: —</div>
         </div>
 
         <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
@@ -307,20 +301,20 @@
 
         <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
           <div class="text-xs font-semibold text-slate-600 mb-2">% Conversão Penny (sobre expostos)</div>
-          <input id="inpPennyConv" type="number" step="0.01" value="2.44" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
-          <div class="text-xs text-slate-500 mt-2">Aplica em BaseExposta</div>
+          <input id="inpPennyConv" type="number" step="0.01" value="3" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
+          <div class="text-xs text-slate-500 mt-2">Aplica na Base Exposta</div>
         </div>
 
         <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
           <div class="text-xs font-semibold text-slate-600 mb-2">Split: % escolhe R$5</div>
           <input id="inpSplit5" type="number" step="1" value="70" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
-          <div class="text-xs text-slate-500 mt-2">R$17 = 100 - R$5</div>
+          <div class="text-xs text-slate-500 mt-2">R$17 = 100 − R$5</div>
         </div>
 
         <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
           <div class="text-xs font-semibold text-slate-600 mb-2">Conv. Full (controle)</div>
           <input id="inpFullCtrl" type="number" step="0.01" value="0.80" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
-          <div class="text-xs text-slate-500 mt-2">Sem penny</div>
+          <div class="text-xs text-slate-500 mt-2">Baseline sem penny</div>
         </div>
 
         <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
@@ -335,14 +329,15 @@
         <div class="bg-white border border-slate-200 rounded-xl p-4 min-w-0">
           <div class="text-xs font-semibold text-slate-700 mb-2">Guardrail (Downside)</div>
           <div class="text-xs text-slate-600">
-            O penny só é mostrado para a <strong>Base Exposta</strong>. O restante segue fluxo padrão.
-            Isso evita superestimar receita por “aplicar penny em 100%”.
+            O Penny é mostrado para a <strong>Base Exposta</strong>. Isso evita superestimar receita por “aplicar penny em 100%”.
+            Se houver canibalização (penny reduz Full), use o heatmap para ver onde a margem aperta.
           </div>
         </div>
         <div class="bg-white border border-slate-200 rounded-xl p-4 min-w-0">
           <div class="text-xs font-semibold text-slate-700 mb-2">Origem define custo</div>
           <div class="text-xs text-slate-600">
-            O custo de mídia vem do <strong>share pago</strong>. O penny não altera custo — altera receita/qualificação.
+            O custo de mídia vem do <strong>share pago</strong> (só essa fatia “carrega” custo variável via CPL).
+            O penny não altera custo — altera receita/qualificação.
           </div>
         </div>
         <div class="bg-white border border-slate-200 rounded-xl p-4 min-w-0">
@@ -362,6 +357,7 @@
             </div>
 
             <div id="kpiTotalRevenue" class="kpi-hero text-slate-900">—</div>
+
             <div id="kpiTotalRevenueNote" class="kpi-sub">—</div>
           </div>
         </div>
@@ -422,7 +418,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-slate-700">
           <div class="bg-white border border-slate-200 rounded-xl p-4 min-w-0">
             <div class="font-semibold">L1 — Monetização imediata</div>
-            <div class="text-xs text-slate-500 mt-1">Receita Penny / Lead reduz CAC líquido (proxy)</div>
+            <div class="text-xs text-slate-500 mt-1">Receita Penny / Lead reduz CAC líquido</div>
             <div id="execL1" class="text-sm font-bold mt-2">—</div>
           </div>
           <div class="bg-white border border-slate-200 rounded-xl p-4 min-w-0">
@@ -444,9 +440,8 @@
       <div class="mb-8">
         <h2 class="text-2xl font-bold text-slate-900 mb-2">Sensibilidade: % Penny x Conversão Full (controle)</h2>
         <p class="text-slate-600 max-w-4xl">
-          Heatmap do <strong>RPL</strong> e da <strong>Margem/Lead</strong> (RPL − custo médio/lead) variando
-          <strong>% Penny</strong> e <strong>Conversão Full do controle</strong>.
-          Mantém split dos planos e uplift do comprador. O penny aplica apenas na <strong>base exposta</strong>.
+          Heatmap do <strong>RPL</strong> e da <strong>Margem/Lead</strong> (RPL - custo médio/lead) variando
+          <strong>% Penny</strong> e <strong>Conversão Full do controle</strong>. Mantém split dos planos e uplift do comprador.
         </p>
       </div>
 
@@ -549,13 +544,13 @@
 
           <div class="text-center relative step-connector p-6">
             <div class="w-14 h-14 bg-slate-100 border-2 border-dashed border-slate-300 rounded-full flex items-center justify-center text-xl mx-auto mb-4">📭</div>
-            <h4 class="font-bold text-slate-700">Grupo Controle (50%)</h4>
+            <h4 class="font-bold text-slate-700">Grupo Controle</h4>
             <p class="text-xs text-slate-500 mt-2">Sem popup na TYP<br />Fluxo padrão da imersão</p>
           </div>
 
           <div class="text-center relative last-step p-6">
             <div class="w-14 h-14 bg-brand-primary text-white rounded-full flex items-center justify-center text-xl mx-auto mb-4 shadow-md">⚡</div>
-            <h4 class="font-bold text-brand-primary">Grupo Tratamento (50%)</h4>
+            <h4 class="font-bold text-brand-primary">Grupo Tratamento</h4>
             <p class="text-xs text-slate-500 mt-2">Popup TYP (R$5 vs R$17)<br />Segmentação automática</p>
 
             <div class="mt-6 bg-slate-50 border border-slate-200 rounded-xl p-4">
@@ -574,7 +569,7 @@
           </div>
           <div class="text-center p-4 bg-white border border-slate-200 rounded-xl shadow-sm">
             <div class="text-xs text-slate-500 uppercase mb-2">Metodologia</div>
-            <div class="text-sm font-bold text-slate-800">A/B Split 50/50</div>
+            <div class="text-sm font-bold text-slate-800">A/B Split</div>
           </div>
           <div class="text-center p-4 bg-white border border-slate-200 rounded-xl shadow-sm">
             <div class="text-xs text-slate-500 uppercase mb-2">Risco</div>
@@ -606,218 +601,369 @@
 
   </main>
 
-<script>
-  // ===== Helpers =====
-  function asNumber(id) {
-    const el = document.getElementById(id);
-    if (!el) return 0;
-    const v = (el.value || "").toString().replace(",", ".");
-    return Number(v) || 0;
-  }
-
-  function pctToDec(pct) { return (pct || 0) / 100; }
-  function clamp01(x) { return Math.max(0, Math.min(1, x)); }
-
-  function formatBRL(n) {
-    return (n || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-  }
-
-  // ===== Model =====
-  function computeModel(params) {
-
-    const base = Math.max(1, params.base);
-    const exposure = clamp01(params.exposure);
-    const paidShare = clamp01(params.paidShare);
-
-    const cpl = Math.max(0, params.cpl);
-    const fixed = Math.max(0, params.fixed);
-    const fullTicket = Math.max(0, params.fullTicket);
-
-    const pennyConv = clamp01(params.pennyConv);
-    const split5 = clamp01(params.split5);
-    const split17 = 1 - split5;
-
-    const fullCtrl = clamp01(params.fullCtrl);
-    const buyerUplift = Math.max(1, params.buyerUplift);
-    const fullBuyer = clamp01(fullCtrl * buyerUplift);
-
-    // ===== Estrutura Base =====
-    const exposedBase = base * exposure;
-    const nonExposedBase = base - exposedBase;
-
-    // ===== Penny =====
-    const buyersTotal = exposedBase * pennyConv;
-    const buyers5 = buyersTotal * split5;
-    const buyers17 = buyersTotal * split17;
-
-    const revenuePenny = (buyers5 * 5) + (buyers17 * 17);
-    const rplPenny = revenuePenny / base;
-
-    const exposedNonBuyers = exposedBase - buyersTotal;
-
-    // ===== Full =====
-    const salesNonExposed = nonExposedBase * fullCtrl;
-    const salesExposedNonBuyers = exposedNonBuyers * fullCtrl;
-    const salesBuyers = buyersTotal * fullBuyer;
-
-    const totalFullSales =
-      salesNonExposed +
-      salesExposedNonBuyers +
-      salesBuyers;
-
-    const revenueFull = totalFullSales * fullTicket;
-
-    // ===== Separação Baseline vs Uplift =====
-    const revenueFullControl =
-      (
-        salesNonExposed +
-        salesExposedNonBuyers +
-        (buyersTotal * fullCtrl)
-      ) * fullTicket;
-
-    const revenueFullUplift =
-      (salesBuyers - (buyersTotal * fullCtrl)) * fullTicket;
-
-    // ===== Receita Total =====
-    const totalRevenue = revenuePenny + revenueFull;
-    const rpl = totalRevenue / base;
-
-    // ===== Baseline sem Penny =====
-    const revenueCurrent = (base * fullCtrl) * fullTicket;
-    const rplCurrent = revenueCurrent / base;
-
-    const deltaRevenue = totalRevenue - revenueCurrent;
-    const deltaPct = revenueCurrent > 0 ? (deltaRevenue / revenueCurrent) : 0;
-
-    const deltaRPL = rpl - rplCurrent;
-
-    const fixedPerLead = fixed / base;
-
-    const avgCostPerLead = cpl * paidShare;
-    const netCAC = avgCostPerLead - rplPenny;
-
-    const cpaMaxProxy = rpl - fixedPerLead;
-    const beLeads = rpl > 0 ? (fixed / rpl) : Infinity;
-
-    return {
-      base,
-      exposure,
-      exposedBase,
-      nonExposedBase,
-      paidShare,
-      cpl,
-      fixed,
-      fullTicket,
-      revenuePenny,
-      revenueFull,
-      revenueFullControl,
-      revenueFullUplift,
-      totalRevenue,
-      rpl,
-      rplCurrent,
-      deltaRevenue,
-      deltaPct,
-      deltaRPL,
-      rplPenny,
-      netCAC,
-      fixedPerLead,
-      cpaMaxProxy,
-      beLeads
-    };
-  }
-
-  // ===== KPIs =====
-  function upsertKpis(model) {
-
-    const elTotal = document.getElementById('kpiTotalRevenue');
-    const elTotalNote = document.getElementById('kpiTotalRevenueNote');
-
-    const elRPL = document.getElementById('kpiRPL');
-    const elRPLNote = document.getElementById('kpiRPLNote');
-
-    const elNetCAC = document.getElementById('kpiNetCAC');
-    const elNetCACNote = document.getElementById('kpiNetCACNote');
-
-    const elInc = document.getElementById('kpiIncrement');
-    const elIncNote = document.getElementById('kpiIncrementNote');
-
-    const elCPAMax = document.getElementById('kpiCPAMax');
-    const elCPAMaxNote = document.getElementById('kpiCPAMaxNote');
-
-    // ===== Big Number =====
-    if (elTotal) elTotal.textContent = formatBRL(model.totalRevenue);
-
-    if (elTotalNote) {
-      elTotalNote.innerHTML =
-        `Penny (L1): ${formatBRL(model.revenuePenny)}<br>` +
-        `Full real: ${formatBRL(model.revenueFullControl)} ` +
-        `+ Uplift compradores: ${formatBRL(model.revenueFullUplift)}`;
+  <!-- SCRIPTS -->
+  <script>
+    // ===== Helpers =====
+    function asNumber(id) {
+      const el = document.getElementById(id);
+      if (!el) return 0;
+      const v = (el.value || "").toString().replace(",", ".");
+      return Number(v) || 0;
+    }
+    function pctToDec(pct) { return (pct || 0) / 100; }
+    function clamp01(x) { return Math.max(0, Math.min(1, x)); }
+    function formatBRL(n) {
+      return (n || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
 
-    // ===== RPL =====
-    if (elRPL) elRPL.textContent = formatBRL(model.rpl);
-    if (elRPLNote)
-      elRPLNote.textContent =
-        `RPL atual: ${formatBRL(model.rplCurrent)} • ΔRPL: ${formatBRL(model.deltaRPL)}`;
+    // ===== Model =====
+    function computeModel(params) {
+      const base = Math.max(1, params.base);
 
-    // ===== CAC =====
-    if (elNetCAC) elNetCAC.textContent = formatBRL(model.netCAC);
-    if (elNetCACNote)
-      elNetCACNote.textContent =
-        `Custo médio/lead: ${formatBRL(model.cpl * model.paidShare)} • RPL Penny: ${formatBRL(model.rplPenny)}`;
+      const exposure = clamp01(params.exposure);      // % base que vê oferta
+      const paidShare = clamp01(params.paidShare);    // % base que é pago (carrega CPL)
 
-    // ===== Incremento =====
-    if (elInc) elInc.textContent = formatBRL(model.deltaRevenue);
-    if (elIncNote)
-      elIncNote.textContent =
-        `Incremento = L1 (Penny) + L2 (Uplift) • ${(model.deltaPct * 100).toFixed(1)}% vs atual`;
+      const cpl = Math.max(0, params.cpl);
+      const fixed = Math.max(0, params.fixed);
+      const fullTicket = Math.max(0, params.fullTicket);
 
-    // ===== Teto =====
-    if (elCPAMax) elCPAMax.textContent = formatBRL(model.cpaMaxProxy);
-    if (elCPAMaxNote)
-      elCPAMaxNote.textContent =
-        `Custo fixo/lead: ${formatBRL(model.fixedPerLead)} • BE: ${Math.ceil(model.beLeads).toLocaleString('pt-BR')} leads`;
-  }
+      const pennyConv = clamp01(params.pennyConv);    // conversão penny sobre expostos
+      const split5 = clamp01(params.split5);
+      const split17 = 1 - split5;
 
-  // ===== Params =====
-  function getParamsFromInputs() {
-    return {
-      base: asNumber('inpBase'),
-      exposure: pctToDec(asNumber('inpExposure')),
-      paidShare: pctToDec(asNumber('inpPaidShare')),
-      cpl: asNumber('inpCPL'),
-      fixed: asNumber('inpFixed'),
-      fullTicket: asNumber('inpFullTicket'),
-      pennyConv: pctToDec(asNumber('inpPennyConv')),
-      split5: pctToDec(asNumber('inpSplit5')),
-      fullCtrl: pctToDec(asNumber('inpFullCtrl')),
-      buyerUplift: asNumber('inpBuyerUplift')
-    };
-  }
+      const fullCtrl = clamp01(params.fullCtrl);      // baseline full (sem penny)
+      const buyerUplift = Math.max(1, params.buyerUplift);
+      const fullBuyer = clamp01(fullCtrl * buyerUplift);
 
-  function refreshAll() {
-    const params = getParamsFromInputs();
-    const model = computeModel(params);
-    upsertKpis(model);
-  }
+      // Bases
+      const exposedBase = base * exposure;
+      const nonExposedBase = base - exposedBase;
 
-  function bindInputs() {
-    const ids = [
-      'inpBase','inpExposure','inpPaidShare','inpCPL','inpFixed',
-      'inpFullTicket','inpPennyConv','inpSplit5',
-      'inpFullCtrl','inpBuyerUplift'
-    ];
+      // Penny (só na base exposta)
+      const buyersTotal = exposedBase * pennyConv;
+      const buyers5 = buyersTotal * split5;
+      const buyers17 = buyersTotal * split17;
 
-    ids.forEach(id => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      el.addEventListener('input', refreshAll);
-    });
-  }
+      const revenuePenny = buyers5 * 5 + buyers17 * 17;
+      const rplPenny = revenuePenny / base;
 
-  bindInputs();
-  refreshAll();
-</script>
+      const exposedNonBuyers = exposedBase - buyersTotal;
+
+      // Full (em 100% da base, com uplift só em compradores)
+      const salesNonExposed = nonExposedBase * fullCtrl;
+      const salesExposedNonBuyers = exposedNonBuyers * fullCtrl;
+      const salesBuyers = buyersTotal * fullBuyer;
+
+      const totalFullSales = salesNonExposed + salesExposedNonBuyers + salesBuyers;
+      const revenueFull = totalFullSales * fullTicket;
+
+      // Separação: Full real (baseline) + uplift incremental
+      const revenueFullControl =
+        (salesNonExposed + salesExposedNonBuyers + (buyersTotal * fullCtrl)) * fullTicket;
+
+      const revenueFullUplift =
+        (salesBuyers - (buyersTotal * fullCtrl)) * fullTicket;
+
+      // Total
+      const totalRevenue = revenuePenny + revenueFull;
+      const rpl = totalRevenue / base;
+
+      // Baseline (sem penny e sem exposição)
+      const revenueCurrent = (base * fullCtrl) * fullTicket;
+      const rplCurrent = revenueCurrent / base;
+
+      const deltaRevenue = totalRevenue - revenueCurrent;
+      const deltaPct = revenueCurrent > 0 ? (deltaRevenue / revenueCurrent) : 0;
+      const deltaRPL = rpl - rplCurrent;
+
+      // Custos
+      const fixedPerLead = fixed / base;
+
+      // custo variável só na parcela paga
+      const avgCostPerLead = cpl * paidShare;
+      const totalMediaCost = base * paidShare * cpl;
+
+      // CAC líquido (proxy): custo médio/lead - RPL Penny (distribuído na base toda)
+      const netCAC = avgCostPerLead - rplPenny;
+
+      const cpaMaxProxy = rpl - fixedPerLead;
+      const beLeads = rpl > 0 ? (fixed / rpl) : Infinity;
+
+      return {
+        base, exposure, paidShare, cpl, fixed, fullTicket,
+        exposedBase, nonExposedBase,
+        pennyConv, split5, split17, fullCtrl, buyerUplift, fullBuyer,
+        buyersTotal, buyers5, buyers17,
+        revenuePenny, revenueFull, revenueFullControl, revenueFullUplift,
+        totalRevenue, revenueCurrent,
+        rpl, rplCurrent, deltaRevenue, deltaPct, deltaRPL,
+        rplPenny, avgCostPerLead, totalMediaCost, netCAC,
+        fixedPerLead, cpaMaxProxy, beLeads
+      };
+    }
+
+    // ===== Charts =====
+    Chart.defaults.font.family = "'Inter', sans-serif";
+    Chart.defaults.color = '#64748b';
+    Chart.defaults.scale.grid.color = '#e2e8f0';
+    Chart.defaults.plugins.legend.labels.usePointStyle = true;
+
+    let mixBuyersChart, revenueSplitChart;
+    let heatMode = 'rpl';
+
+    function upsertCharts(model) {
+      const ctxMix = document.getElementById('mixBuyersChart')?.getContext('2d');
+      if (ctxMix) {
+        const dataMix = [model.buyers5, model.buyers17];
+        if (!mixBuyersChart) {
+          mixBuyersChart = new Chart(ctxMix, {
+            type: 'doughnut',
+            data: {
+              labels: ['Compradores R$ 5', 'Compradores R$ 17'],
+              datasets: [{ data: dataMix, backgroundColor: ['#4338ca', '#0d9488'], borderWidth: 0, hoverOffset: 4 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'bottom' } } }
+          });
+        } else {
+          mixBuyersChart.data.datasets[0].data = dataMix;
+          mixBuyersChart.update();
+        }
+      }
+
+      const ctxRev = document.getElementById('revenueSplitChart')?.getContext('2d');
+      if (ctxRev) {
+        const penny = model.revenuePenny;
+        const fullReal = model.revenueFullControl;
+        const uplift = model.revenueFullUplift;
+
+        if (!revenueSplitChart) {
+          revenueSplitChart = new Chart(ctxRev, {
+            type: 'bar',
+            data: {
+              labels: ['Receita Total'],
+              datasets: [
+                { label: 'Penny (L1)', data: [penny], backgroundColor: '#f59e0b', borderRadius: 8 },
+                { label: 'Full real (baseline)', data: [fullReal], backgroundColor: '#0d9488', borderRadius: 8 },
+                { label: 'Uplift compradores (L2)', data: [uplift], backgroundColor: '#4338ca', borderRadius: 8 }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { position: 'top' },
+                tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${formatBRL(ctx.parsed.y)}` } }
+              },
+              scales: {
+                x: { stacked: true },
+                y: { stacked: true, beginAtZero: true, ticks: { callback: (v) => 'R$ ' + (v/1000).toFixed(0) + 'k' } }
+              }
+            }
+          });
+        } else {
+          revenueSplitChart.data.datasets[0].data = [penny];
+          revenueSplitChart.data.datasets[1].data = [fullReal];
+          revenueSplitChart.data.datasets[2].data = [uplift];
+          revenueSplitChart.update();
+        }
+      }
+    }
+
+    // ===== KPIs =====
+    function upsertKpis(model) {
+      const elTotal = document.getElementById('kpiTotalRevenue');
+      const elTotalNote = document.getElementById('kpiTotalRevenueNote');
+
+      const elRPL = document.getElementById('kpiRPL');
+      const elRPLNote = document.getElementById('kpiRPLNote');
+
+      const elNetCAC = document.getElementById('kpiNetCAC');
+      const elNetCACNote = document.getElementById('kpiNetCACNote');
+
+      const elInc = document.getElementById('kpiIncrement');
+      const elIncNote = document.getElementById('kpiIncrementNote');
+
+      const elCPAMax = document.getElementById('kpiCPAMax');
+      const elCPAMaxNote = document.getElementById('kpiCPAMaxNote');
+
+      const cplMediaTotal = document.getElementById('cplMediaTotal');
+
+      if (cplMediaTotal) {
+        cplMediaTotal.textContent = `Custo total de mídia: ${formatBRL(model.totalMediaCost)}`;
+      }
+
+      // Big number
+      if (elTotal) elTotal.textContent = formatBRL(model.totalRevenue);
+      if (elTotalNote) {
+        const expoPct = (model.exposure * 100).toFixed(0);
+        elTotalNote.innerHTML =
+          `Penny (L1): ${formatBRL(model.revenuePenny)} • ` +
+          `Full real: ${formatBRL(model.revenueFullControl)} ` +
+          `+ Uplift compradores: ${formatBRL(model.revenueFullUplift)} • ` +
+          `Exposição: ${expoPct}%`;
+      }
+
+      // RPL
+      if (elRPL) elRPL.textContent = formatBRL(model.rpl);
+      if (elRPLNote) {
+        elRPLNote.textContent =
+          `RPL atual: ${formatBRL(model.rplCurrent)} • ΔRPL: ${formatBRL(model.deltaRPL)} • ` +
+          `Custo médio/lead: ${formatBRL(model.avgCostPerLead)}`;
+      }
+
+      // CAC líquido
+      if (elNetCAC) elNetCAC.textContent = formatBRL(model.netCAC);
+      if (elNetCACNote) {
+        elNetCACNote.textContent =
+          `Proxy: (CPL×SharePago) − (RPL Penny) • SharePago: ${(model.paidShare*100).toFixed(0)}% • RPL Penny: ${formatBRL(model.rplPenny)}`;
+      }
+
+      // Incremento
+      if (elInc) elInc.textContent = formatBRL(model.deltaRevenue);
+      if (elIncNote) {
+        const baseExposta = Math.round(model.exposedBase).toLocaleString('pt-BR');
+        elIncNote.textContent =
+          `Incremento = L1 (Penny) + L2 (Uplift) • ${(model.deltaPct * 100).toFixed(1)}% • Base exposta: ${baseExposta}`;
+      }
+
+      // Teto
+      if (elCPAMax) elCPAMax.textContent = formatBRL(model.cpaMaxProxy);
+      if (elCPAMaxNote) {
+        elCPAMaxNote.textContent =
+          `Custo fixo/lead: ${formatBRL(model.fixedPerLead)} • BE estrutural: ${Math.ceil(model.beLeads).toLocaleString('pt-BR')} leads`;
+      }
+
+      // Executivo
+      const e1 = document.getElementById('execL1');
+      const e2 = document.getElementById('execL2');
+      const e3 = document.getElementById('execL3');
+
+      if (e1) e1.textContent = `RPL Penny: ${formatBRL(model.rplPenny)} → CAC líquido (proxy): ${formatBRL(model.netCAC)}`;
+      if (e2) e2.textContent = `Conv Full (controle): ${(model.fullCtrl*100).toFixed(2)}% • Comprador: ${(model.fullBuyer*100).toFixed(2)}%`;
+      if (e3) e3.textContent = `Teto (proxy): ${formatBRL(model.cpaMaxProxy)} por lead (abatendo fixo/lead)`;
+    }
+
+    // ===== Heatmap =====
+    function buildHeatmap(baseParams) {
+      const xs = [0.8, 1.0, 1.7, 2, 3, 4, 5, 6, 7, 8].map(pctToDec); // fullCtrl
+      const ys = [1, 2, 3, 4, 5, 6].map(pctToDec);                   // pennyConv (sobre expostos)
+
+      const values = [];
+      ys.forEach(y => xs.forEach(x => {
+        const p = { ...baseParams, pennyConv: y, fullCtrl: x };
+        const m = computeModel(p);
+        const v = (heatMode === 'rpl') ? m.rpl : (m.rpl - m.avgCostPerLead);
+        values.push(v);
+      }));
+
+      const minV = Math.min(...values);
+      const maxV = Math.max(...values);
+      const span = (maxV - minV) || 1;
+
+      function cellBg(v) {
+        const t = clamp01((v - minV) / span);
+        const alpha = 0.08 + t * 0.35;
+        return `rgba(13, 148, 136, ${alpha})`;
+      }
+
+      const html = `
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr>
+              <th class="text-left p-3 border-b border-slate-200 bg-slate-50 sticky left-0 z-10">Penny \\ Full</th>
+              ${xs.map(x => `<th class="p-3 border-b border-slate-200 bg-slate-50 text-center">${(x*100).toFixed(1)}%</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+            ${ys.map(y => `
+              <tr>
+                <td class="p-3 border-b border-slate-100 bg-white sticky left-0 z-10 font-semibold text-slate-700">
+                  ${(y*100).toFixed(0)}%
+                </td>
+                ${xs.map(x => {
+                  const p = { ...baseParams, pennyConv: y, fullCtrl: x };
+                  const m = computeModel(p);
+                  const margin = (m.rpl - m.avgCostPerLead);
+                  const v = (heatMode === 'rpl') ? m.rpl : margin;
+                  const label = formatBRL(v);
+                  const sub = (heatMode === 'rpl')
+                    ? `Margem: ${formatBRL(margin)}`
+                    : `RPL: ${formatBRL(m.rpl)}`;
+                  return `
+                    <td class="p-3 border-b border-slate-100 text-center" style="background:${cellBg(v)}">
+                      <div class="font-bold text-slate-900">${label}</div>
+                      <div class="text-xs text-slate-600 mt-1">${sub}</div>
+                    </td>
+                  `;
+                }).join('')}
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+
+      const container = document.getElementById('heatmapContainer');
+      if (container) container.innerHTML = html;
+    }
+
+    // ===== Orchestration =====
+    function getParamsFromInputs() {
+      return {
+        base: asNumber('inpBase'),
+        exposure: pctToDec(asNumber('inpExposure')),
+        paidShare: pctToDec(asNumber('inpPaidShare')),
+        cpl: asNumber('inpCPL'),
+        fixed: asNumber('inpFixed'),
+        fullTicket: asNumber('inpFullTicket'),
+        pennyConv: pctToDec(asNumber('inpPennyConv')),
+        split5: pctToDec(asNumber('inpSplit5')),
+        fullCtrl: pctToDec(asNumber('inpFullCtrl')),
+        buyerUplift: asNumber('inpBuyerUplift')
+      };
+    }
+
+    function refreshAll() {
+      const params = getParamsFromInputs();
+      const model = computeModel(params);
+      upsertKpis(model);
+      upsertCharts(model);
+      buildHeatmap(params);
+    }
+
+    function bindInputs() {
+      const ids = [
+        'inpBase','inpExposure','inpPaidShare','inpCPL','inpFixed','inpFullTicket',
+        'inpPennyConv','inpSplit5','inpFullCtrl','inpBuyerUplift'
+      ];
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('input', refreshAll);
+      });
+
+      const btnRPL = document.getElementById('btnHeatRPL');
+      const btnMargin = document.getElementById('btnHeatMargin');
+
+      if (btnRPL && btnMargin) {
+        btnRPL.addEventListener('click', () => {
+          heatMode = 'rpl';
+          btnRPL.className = 'px-3 py-2 rounded-lg bg-slate-900 text-white';
+          btnMargin.className = 'px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-700';
+          refreshAll();
+        });
+
+        btnMargin.addEventListener('click', () => {
+          heatMode = 'margin';
+          btnMargin.className = 'px-3 py-2 rounded-lg bg-slate-900 text-white';
+          btnRPL.className = 'px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-700';
+          refreshAll();
+        });
+      }
+    }
+
+    bindInputs();
+    refreshAll();
+  </script>
 
 </body>
 </html>
