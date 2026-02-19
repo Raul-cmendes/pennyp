@@ -47,6 +47,7 @@
     @media (max-width: 640px) {
       .chart-container { height: 280px; }
     }
+
     .glass-card {
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
@@ -78,20 +79,34 @@
         transform: translateY(-50%);
       }
     }
-    /* tiny helper for kpi labels */
+
+    /* Subtexto KPI */
     .kpi-sub { font-size: 12px; color: #64748b; margin-top: 6px; line-height: 1.3; }
-    /* Remove spinners em inputs type=number (Chrome/Safari/Edge) */
-input[type=number]::-webkit-outer-spin-button,
-input[type=number]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
 
-/* Remove spinner no Firefox */
-input[type=number] {
-  -moz-appearance: textfield;
-}
+    /* Remove spinners em inputs number */
+    input[type=number]::-webkit-outer-spin-button,
+    input[type=number]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type=number] { -moz-appearance: textfield; }
 
+    /* KPI layout fixes (resolve quebra/órfãos) */
+    .kpi-card { min-width: 0; }
+    .kpi-title {
+      font-size: 12px;
+      line-height: 1.2;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #64748b;
+    }
+    .kpi-value {
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      word-break: break-word;
+    }
   </style>
 </head>
 
@@ -130,7 +145,6 @@ input[type=number] {
         </div>
       </div>
 
-      <!-- NOVO: O QUE MUDA -->
       <div class="bg-white p-8 rounded-xl shadow-md border-l-8 border-brand-primary">
         <h2 class="text-2xl font-bold text-gray-800 mb-4">O Que Muda com o Penny</h2>
         <p class="text-gray-600 mb-4">
@@ -232,9 +246,7 @@ input[type=number] {
       </div>
     </section>
 
-    <!-- ===================================================== -->
-    <!-- NOVO: PAINEL EXECUTIVO (L1/L2/L3 + CAC LIQUIDO + TETO) -->
-    <!-- ===================================================== -->
+    <!-- PAINEL EXECUTIVO -->
     <section class="bg-white p-8 rounded-2xl shadow-md border border-slate-100">
       <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-8">
         <div>
@@ -257,73 +269,72 @@ input[type=number] {
 
       <!-- Inputs -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
           <div class="text-xs font-semibold text-slate-600 mb-2">Base (inscritos)</div>
           <input id="inpBase" type="number" value="41000" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
           <div class="text-xs text-slate-500 mt-2">Ex: 41.000 (50% da base total)</div>
         </div>
 
-        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
           <div class="text-xs font-semibold text-slate-600 mb-2">CPL médio (R$)</div>
           <input id="inpCPL" type="number" step="0.01" value="8" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
           <div class="text-xs text-slate-500 mt-2">Já inclui custo de mídia por lead</div>
         </div>
 
-        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
           <div class="text-xs font-semibold text-slate-600 mb-2">Custo fixo (R$)</div>
           <input id="inpFixed" type="number" value="25000" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
           <div class="text-xs text-slate-500 mt-2">Break-even estrutural</div>
         </div>
 
-        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
           <div class="text-xs font-semibold text-slate-600 mb-2">Ticket Plano Full (R$)</div>
           <input id="inpFullTicket" type="number" value="1200" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
           <div class="text-xs text-slate-500 mt-2">TM usado no modelo</div>
         </div>
 
-        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
           <div class="text-xs font-semibold text-slate-600 mb-2">% Conversão Penny (total)</div>
           <input id="inpPennyConv" type="number" step="0.01" value="2.44" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
           <div class="text-xs text-slate-500 mt-2">Ex: 2,44%</div>
         </div>
 
-        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
           <div class="text-xs font-semibold text-slate-600 mb-2">Split: % escolhe R$5</div>
           <input id="inpSplit5" type="number" step="1" value="70" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
           <div class="text-xs text-slate-500 mt-2">R$17 = 100 - R$5</div>
         </div>
 
-        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
           <div class="text-xs font-semibold text-slate-600 mb-2">Conv. Full (controle)</div>
           <input id="inpFullCtrl" type="number" step="0.01" value="0.80" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
           <div class="text-xs text-slate-500 mt-2">Sem penny</div>
         </div>
 
-        <!-- ALTERADO: uplifts explícitos (L2) -->
-        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0">
           <div class="text-xs font-semibold text-slate-600 mb-2">Uplift comprador → Full (x)</div>
           <input id="inpBuyerUplift" type="number" min="1" step="0.1" value="3.8" class="w-full rounded-lg border border-slate-300 p-2 text-sm" />
           <div class="text-xs text-slate-500 mt-2">Ex: 3,8× mais que o controle</div>
         </div>
       </div>
 
-      <!-- NOVO: Guardrails / downside -->
+      <!-- Guardrails -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-10">
-        <div class="bg-white border border-slate-200 rounded-xl p-4">
+        <div class="bg-white border border-slate-200 rounded-xl p-4 min-w-0">
           <div class="text-xs font-semibold text-slate-700 mb-2">Guardrail (Downside)</div>
           <div class="text-xs text-slate-600">
             O modelo assume que o Penny não reduz a conversão do Full do grupo controle (apenas cria um cluster com intenção maior).
             Se houver canibalização, o heatmap mostra onde a margem fica apertada.
           </div>
         </div>
-        <div class="bg-white border border-slate-200 rounded-xl p-4">
+        <div class="bg-white border border-slate-200 rounded-xl p-4 min-w-0">
           <div class="text-xs font-semibold text-slate-700 mb-2">CPL vs “custo total mídia”</div>
           <div class="text-xs text-slate-600">
             <strong>CPL já inclui mídia</strong>. Você só “duplica” custo se somar um orçamento de mídia separado
             além do CPL. Use orçamento só para estimar volume: <em>Leads = Budget / CPL</em>.
           </div>
         </div>
-        <div class="bg-white border border-slate-200 rounded-xl p-4">
+        <div class="bg-white border border-slate-200 rounded-xl p-4 min-w-0">
           <div class="text-xs font-semibold text-slate-700 mb-2">O que importa</div>
           <div class="text-xs text-slate-600">
             <strong>L1:</strong> Receita Penny • <strong>L2:</strong> Uplift comprador no Full • <strong>L3:</strong> Teto CPA e CAC líquido.
@@ -331,43 +342,42 @@ input[type=number] {
         </div>
       </div>
 
-      <!-- KPI Cards (expandido) -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-        <div class="glass-card p-6 rounded-xl shadow-sm lg:col-span-2">
-          <div class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight tabular-nums break-words">Receita total (penny + full)</div>
-          <div id="kpiTotalRevenue" class="text-3xl font-extrabold text-slate-900">—</div>
+      <!-- KPI Cards (corrigido: grid sem órfão + títulos pequenos) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
+        <div class="glass-card kpi-card p-6 rounded-xl shadow-sm xl:col-span-2">
+          <div class="kpi-title">Receita total (penny + full)</div>
+          <div id="kpiTotalRevenue" class="kpi-value text-3xl md:text-4xl font-extrabold text-slate-900 mt-2">—</div>
           <div id="kpiTotalRevenueNote" class="kpi-sub">—</div>
         </div>
 
-        <div class="glass-card p-6 rounded-xl shadow-sm">
-          <div class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight tabular-nums break-words">RPL</div>
-          <div id="kpiRPL" class="text-3xl font-extrabold text-slate-900">—</div>
+        <div class="glass-card kpi-card p-6 rounded-xl shadow-sm">
+          <div class="kpi-title">RPL</div>
+          <div id="kpiRPL" class="kpi-value text-3xl md:text-4xl font-extrabold text-slate-900 mt-2">—</div>
           <div id="kpiRPLNote" class="kpi-sub">—</div>
         </div>
 
-        <!-- NOVO: CAC líquido -->
-        <div class="glass-card p-6 rounded-xl shadow-sm">
-          <div class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight tabular-nums break-words">CAC líquido (proxy)</div>
-          <div id="kpiNetCAC" class="text-3xl font-extrabold text-slate-900">—</div>
+        <div class="glass-card kpi-card p-6 rounded-xl shadow-sm">
+          <div class="kpi-title">CAC líquido (proxy)</div>
+          <div id="kpiNetCAC" class="kpi-value text-3xl md:text-4xl font-extrabold text-slate-900 mt-2">—</div>
           <div id="kpiNetCACNote" class="kpi-sub">—</div>
         </div>
 
-        <div class="glass-card p-6 rounded-xl shadow-sm min-w-0">
-          <div class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight tabular-nums break-words">Incremento vs atual</div>
-          <div id="kpiIncrement" class="text-3xl font-extrabold text-slate-900">—</div>
+        <div class="glass-card kpi-card p-6 rounded-xl shadow-sm">
+          <div class="kpi-title">Incremento vs atual</div>
+          <div id="kpiIncrement" class="kpi-value text-3xl md:text-4xl font-extrabold text-slate-900 mt-2">—</div>
           <div id="kpiIncrementNote" class="kpi-sub">—</div>
         </div>
 
-        <div class="glass-card p-6 rounded-xl shadow-sm">
-          <div class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight tabular-nums break-words">Teto de escala (CPA máx proxy)</div>
-          <div id="kpiCPAMax" class="text-3xl font-extrabold text-slate-900">—</div>
+        <div class="glass-card kpi-card p-6 rounded-xl shadow-sm">
+          <div class="kpi-title">Teto de escala (CPA máx proxy)</div>
+          <div id="kpiCPAMax" class="kpi-value text-3xl md:text-4xl font-extrabold text-slate-900 mt-2">—</div>
           <div id="kpiCPAMaxNote" class="kpi-sub">—</div>
         </div>
       </div>
 
       <!-- Charts -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-10">
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 lg:col-span-1">
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 lg:col-span-1 min-w-0">
           <h3 class="font-bold text-center mb-4 text-slate-700">Mix de Compradores (R$5 vs R$17)</h3>
           <div class="chart-container" style="height: 260px;">
             <canvas id="mixBuyersChart"></canvas>
@@ -377,7 +387,7 @@ input[type=number] {
           </div>
         </div>
 
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 lg:col-span-2">
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 lg:col-span-2 min-w-0">
           <h3 class="font-bold text-center mb-4 text-slate-700">Receita por Fonte (Penny vs Full)</h3>
           <div class="chart-container">
             <canvas id="revenueSplitChart"></canvas>
@@ -388,21 +398,21 @@ input[type=number] {
         </div>
       </div>
 
-      <!-- NOVO: “Trecho executivo” com L1/L2/L3 -->
+      <!-- Resumo executivo -->
       <div class="mt-10 bg-slate-50 border border-slate-200 rounded-2xl p-6">
         <h3 class="text-sm font-bold text-slate-800 mb-3">Resumo executivo (L1 / L2 / L3)</h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-slate-700">
-          <div class="bg-white border border-slate-200 rounded-xl p-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-4 min-w-0">
             <div class="font-semibold">L1 — Monetização imediata</div>
             <div class="text-xs text-slate-500 mt-1">Receita Penny / Lead reduz CAC líquido</div>
             <div id="execL1" class="text-sm font-bold mt-2">—</div>
           </div>
-          <div class="bg-white border border-slate-200 rounded-xl p-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-4 min-w-0">
             <div class="font-semibold">L2 — Qualificação</div>
             <div class="text-xs text-slate-500 mt-1">Compradores convertem mais no Full</div>
             <div id="execL2" class="text-sm font-bold mt-2">—</div>
           </div>
-          <div class="bg-white border border-slate-200 rounded-xl p-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-4 min-w-0">
             <div class="font-semibold">L3 — Teto de escala</div>
             <div class="text-xs text-slate-500 mt-1">RPL maior sustenta CPA maior</div>
             <div id="execL3" class="text-sm font-bold mt-2">—</div>
@@ -411,9 +421,7 @@ input[type=number] {
       </div>
     </section>
 
-    <!-- ===================================================== -->
-    <!-- SENSIBILIDADE (HEATMAP) - ALTERADO: inclui uplift -->
-    <!-- ===================================================== -->
+    <!-- SENSIBILIDADE (HEATMAP) -->
     <section class="bg-slate-50 rounded-3xl p-8 md:p-12 border border-slate-200">
       <div class="mb-8">
         <h2 class="text-2xl font-bold text-slate-900 mb-2">Sensibilidade: % Penny x Conversão Full (controle)</h2>
@@ -437,20 +445,18 @@ input[type=number] {
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 text-xs text-slate-600">
-        <div class="bg-white border border-slate-200 rounded-xl p-4">
+        <div class="bg-white border border-slate-200 rounded-xl p-4 min-w-0">
           <div class="font-semibold text-slate-700 mb-1">Como usar</div>
           <div>1) Ajuste premissas no painel.</div>
           <div>2) Veja onde RPL passa o CPL com folga.</div>
         </div>
-        <div class="bg-white border border-slate-200 rounded-xl p-4">
+        <div class="bg-white border border-slate-200 rounded-xl p-4 min-w-0">
           <div class="font-semibold text-slate-700 mb-1">Leitura</div>
           <div>Células mais “escuras” = mais valor (RPL/margem maior).</div>
         </div>
-        <div class="bg-white border border-slate-200 rounded-xl p-4">
+        <div class="bg-white border border-slate-200 rounded-xl p-4 min-w-0">
           <div class="font-semibold text-slate-700 mb-1">Decisão</div>
-          <div>
-            Se a margem apertar: subir %penny, aumentar uplift, ou melhorar conv full no controle.
-          </div>
+          <div>Se a margem apertar: subir %penny, aumentar uplift, ou melhorar conv full no controle.</div>
         </div>
       </div>
     </section>
@@ -508,7 +514,6 @@ input[type=number] {
     <!-- EXPERIMENTO -->
     <section class="py-16 border-t border-slate-200">
       <div class="max-w-5xl mx-auto">
-
         <div class="text-center mb-12">
           <h2 class="text-3xl font-bold text-slate-900 mb-3">Desenho do Experimento</h2>
           <p class="text-slate-500 text-sm max-w-2xl mx-auto">
@@ -561,7 +566,6 @@ input[type=number] {
             <div class="text-sm font-bold text-brand-primary uppercase">Aprovação</div>
           </div>
         </div>
-
       </div>
     </section>
 
@@ -583,9 +587,7 @@ input[type=number] {
 
   </main>
 
-  <!-- ===================================================== -->
-  <!-- SCRIPTS (FIXES + NOVOS KPIs + HEATMAP + CHARTS)        -->
-  <!-- ===================================================== -->
+  <!-- SCRIPTS -->
   <script>
     // ===== Helpers =====
     function asNumber(id) {
@@ -628,7 +630,7 @@ input[type=number] {
       const nonBuyers = base - buyersTotal;
 
       const salesCtrl = nonBuyers * fullCtrl;
-      const salesBuyers = buyersTotal * fullBuyer; // compradores (tanto 5 quanto 17) entram aqui, mesmo uplift
+      const salesBuyers = buyersTotal * fullBuyer;
 
       const revenueFull = (salesCtrl + salesBuyers) * fullTicket;
 
@@ -647,14 +649,13 @@ input[type=number] {
       // L3 proxies
       const fixedPerLead = fixed / base;
 
-      // Importante: CPL já é custo de mídia/lead.
-      // CAC líquido (proxy) = CPL - RPL_penny  (só abatendo o que entra de caixa no penny)
+      // CPL já inclui mídia/lead.
       const netCAC = cpl - rplPenny;
 
-      // "Teto CPA" proxy: quanto cabe pagar por lead se quiser cobrir fixo via RPL total
+      // "Teto CPA" proxy
       const cpaMaxProxy = rpl - fixedPerLead;
 
-      // Break-even estrutural: quantos leads para cobrir fixo com RPL total
+      // Break-even estrutural
       const beLeads = rpl > 0 ? (fixed / rpl) : Infinity;
 
       return {
@@ -739,7 +740,7 @@ input[type=number] {
       }
     }
 
-    // ===== KPIs (L1/L2/L3) =====
+    // ===== KPIs =====
     function upsertKpis(model) {
       const elTotal = document.getElementById('kpiTotalRevenue');
       const elTotalNote = document.getElementById('kpiTotalRevenueNote');
@@ -762,19 +763,14 @@ input[type=number] {
       if (elRPLNote) elRPLNote.textContent = `RPL atual: ${formatBRL(model.rplCurrent)} • ΔRPL: ${formatBRL(model.deltaRPL)}`;
 
       if (elNetCAC) elNetCAC.textContent = formatBRL(model.netCAC);
-      if (elNetCACNote) {
-        elNetCACNote.textContent = `CPL: ${formatBRL(model.cpl)} • RPL Penny: ${formatBRL(model.rplPenny)} (CPL − RPLpenny)`;
-      }
+      if (elNetCACNote) elNetCACNote.textContent = `CPL: ${formatBRL(model.cpl)} • RPL Penny: ${formatBRL(model.rplPenny)} (CPL − RPLpenny)`;
 
       if (elInc) elInc.textContent = formatBRL(model.deltaRevenue);
       if (elIncNote) elIncNote.textContent = `Incremento: ${(model.deltaPct * 100).toFixed(0)}% • Uplift: ${model.buyerUplift.toFixed(1)}×`;
 
       if (elCPAMax) elCPAMax.textContent = formatBRL(model.cpaMaxProxy);
-      if (elCPAMaxNote) {
-        elCPAMaxNote.textContent = `Custo fixo/lead: ${formatBRL(model.fixedPerLead)} • BE estrutural: ${Math.ceil(model.beLeads).toLocaleString('pt-BR')} leads`;
-      }
+      if (elCPAMaxNote) elCPAMaxNote.textContent = `Custo fixo/lead: ${formatBRL(model.fixedPerLead)} • BE estrutural: ${Math.ceil(model.beLeads).toLocaleString('pt-BR')} leads`;
 
-      // Exec blocks
       const e1 = document.getElementById('execL1');
       const e2 = document.getElementById('execL2');
       const e3 = document.getElementById('execL3');
@@ -786,12 +782,9 @@ input[type=number] {
 
     // ===== Heatmap =====
     function buildHeatmap(baseParams) {
-      // eixo X: conv full (controle)
       const xs = [0.8, 1.0, 1.7, 2, 3, 4, 5, 6, 7, 8].map(pctToDec);
-      // eixo Y: % penny
       const ys = [2, 3, 4, 5, 6].map(pctToDec);
 
-      // calc min/max
       const values = [];
       ys.forEach(y => xs.forEach(x => {
         const p = { ...baseParams, pennyConv: y, fullCtrl: x };
@@ -828,7 +821,6 @@ input[type=number] {
                   ${xs.map(x => {
                     const p = { ...baseParams, pennyConv: y, fullCtrl: x };
                     const m = computeModel(p);
-
                     const margin = (m.rpl - m.cpl);
                     const v = (heatMode === 'rpl') ? m.rpl : margin;
 
@@ -919,19 +911,9 @@ input[type=number] {
       }
     }
 
-    // init
     bindInputs();
     refreshAll();
   </script>
-
-  <!-- ===================================================== -->
-  <!-- IMPORTANT FIX: remover charts antigos quebrados        -->
-  <!-- Seu código original tentava inicializar revenueChart,  -->
-  <!-- cpaChart, splitChart, directRevenueChart sem canvases. -->
-  <!-- Se você quiser manter, crie os canvases correspondentes -->
-  <!-- ou apague aqueles blocos. Aqui, só usamos os canvases   -->
-  <!-- mixBuyersChart e revenueSplitChart (já existentes).     -->
-  <!-- ===================================================== -->
 
 </body>
 </html>
