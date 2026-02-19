@@ -370,64 +370,69 @@
         </div>
       </div>
 
-<!-- KPI Cards (hierarquia corrigida) -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+<!-- KPI Cards - layout em 2 linhas -->
+<div class="space-y-6">
 
-  <!-- CARD PRINCIPAL (hero): Receita total -->
-  <div class="glass-card p-6 rounded-xl shadow-sm lg:col-span-2">
-    <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-2">
-      Receita total (penny + full)
-    </div>
+  <!-- ===== LINHA 1: SOMENTE RECEITA ===== -->
+  <div class="grid grid-cols-1">
+    <div class="glass-card p-6 rounded-xl shadow-sm">
+      <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-2">
+        Receita total (penny + full)
+      </div>
 
-    <div id="kpiTotalRevenue" class="kpi-hero text-slate-900">—</div>
+      <div id="kpiTotalRevenue" class="kpi-hero text-slate-900">
+        —
+      </div>
 
-    <div id="kpiTotalRevenueNote" class="kpi-sub">
-      — 
+      <div id="kpiTotalRevenueNote" class="kpi-sub">
+        —
+      </div>
     </div>
   </div>
 
-  <!-- Secundário: RPL -->
-  <div class="glass-card p-6 rounded-xl shadow-sm min-w-0">
-    <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-2">
-      RPL
+  <!-- ===== LINHA 2: OS OUTROS CARDS ===== -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+    <!-- RPL -->
+    <div class="glass-card p-6 rounded-xl shadow-sm min-w-0">
+      <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-2">
+        RPL
+      </div>
+      <div id="kpiRPL" class="kpi-mini text-slate-900">—</div>
+      <div id="kpiRPLNote" class="kpi-sub">—</div>
     </div>
 
-    <div id="kpiRPL" class="kpi-mini text-slate-900">—</div>
-    <div id="kpiRPLNote" class="kpi-sub">—</div>
-  </div>
-
-  <!-- Secundário: CAC líquido -->
-  <div class="glass-card p-6 rounded-xl shadow-sm min-w-0">
-    <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-2">
-      CAC líquido (proxy)
+    <!-- CAC Líquido -->
+    <div class="glass-card p-6 rounded-xl shadow-sm min-w-0">
+      <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-2">
+        CAC líquido (proxy)
+      </div>
+      <div id="kpiNetCAC" class="kpi-mini text-slate-900">—</div>
+      <div id="kpiNetCACNote" class="kpi-sub">—</div>
     </div>
 
-    <div id="kpiNetCAC" class="kpi-mini text-slate-900">—</div>
-    <div id="kpiNetCACNote" class="kpi-sub">—</div>
-  </div>
-
-  <!-- Secundário: Incremento -->
-  <div class="glass-card p-6 rounded-xl shadow-sm min-w-0">
-    <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-2">
-      Incremento vs atual
+    <!-- Incremento -->
+    <div class="glass-card p-6 rounded-xl shadow-sm min-w-0">
+      <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-2">
+        Incremento vs atual
+      </div>
+      <div id="kpiIncrement" class="kpi-mini text-slate-900">—</div>
+      <div id="kpiIncrementNote" class="kpi-sub">—</div>
     </div>
 
-    <!-- O segredo pra não quebrar: nowrap + tabular nums (já no helper) -->
-    <div id="kpiIncrement" class="kpi-mini text-slate-900">—</div>
-    <div id="kpiIncrementNote" class="kpi-sub">—</div>
-  </div>
-
-  <!-- Secundário: Teto -->
-  <div class="glass-card p-6 rounded-xl shadow-sm min-w-0">
-    <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-2">
-      Teto de escala (CPA máx proxy)
+    <!-- Teto -->
+    <div class="glass-card p-6 rounded-xl shadow-sm min-w-0">
+      <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-2">
+        Teto de escala (CPA máx proxy)
+      </div>
+      <div id="kpiCPAMax" class="kpi-mini text-slate-900">—</div>
+      <div id="kpiCPAMaxNote" class="kpi-sub">—</div>
     </div>
 
-    <div id="kpiCPAMax" class="kpi-mini text-slate-900">—</div>
-    <div id="kpiCPAMaxNote" class="kpi-sub">—</div>
   </div>
 
 </div>
+
 
 
       <!-- Charts -->
